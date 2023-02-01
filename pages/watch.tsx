@@ -57,7 +57,13 @@ function WatchPage() {
     }
   );
 
-  const { recommendedVideos = [] } = data || {};
+  const {
+    title,
+    author,
+    authorThumbnails,
+    subCountText,
+    recommendedVideos = [],
+  } = data || {};
 
   return (
     <div
@@ -74,7 +80,7 @@ function WatchPage() {
       <main className="container mx-auto pt-24">
         <div className="flex flex-row gap-8">
           {/* Video Player */}
-          <div className="flex flex-col">
+          <div className="flex flex-col gap-8">
             <iframe
               src={`https://www.youtube.com/embed/${videoId}?autoplay=1&controls=0&disablekb=1&enablejsapi=1&modestbranding=1&playsinline=1`}
               title="YouTube video player"
@@ -82,16 +88,33 @@ function WatchPage() {
               allowFullScreen
               className="bg-base-300 w-[900px] aspect-video"
             />
+            <div className="flex flex-col gap-1">
+              <h1 className="text-xl">{title}</h1>
+              <div className="border-t my-2" />
+              <div className="flex flex-row gap-3">
+                <Image
+                  unoptimized
+                  src={authorThumbnails?.[1]?.url}
+                  width={48}
+                  height={48}
+                  className="rounded-full flex-shrink-0"
+                />
+                <div className="flex flex-col">
+                  <div className="font-bold">{author}</div>
+                  <div className="text-xs">{subCountText} người đăng ký</div>
+                </div>
+              </div>
+            </div>
           </div>
           {/* Recommend Videos List */}
           <div className="relative flex flex-col gap-2">
             {/* Video Row Item */}
             {isLoading && (
               <>
-                <div className="absolute inset-0 bg-gradient-to-t from-white" />
+                <div className="absolute inset-0 bg-gradient-to-t from-base-100" />
                 {skeleton.map((s) => (
                   <div key={s} className="flex flex-row gap-2">
-                    <div className="bg-base-300 w-[120px] h-[90px]" />
+                    <div className="bg-base-300 w-[160px] h-[90px]" />
                     <div className="flex-col flex gap-2">
                       <div className="w-56 h-4 bg-base-300" />
                       <div className="w-24 h-4 bg-base-300" />
@@ -103,7 +126,7 @@ function WatchPage() {
               </>
             )}
             {recommendedVideos?.map((rcm) => {
-              const thumbnail = rcm.videoThumbnails?.[5];
+              const thumbnail = rcm.videoThumbnails?.[4];
               return (
                 <div
                   key={rcm.videoId}
@@ -115,8 +138,8 @@ function WatchPage() {
                     priority
                     src={thumbnail?.url}
                     alt={thumbnail?.quality}
-                    width={thumbnail?.width}
-                    height={thumbnail.height}
+                    width={160}
+                    height={90}
                     layout="fixed"
                     className="bg-base-300"
                   />
@@ -124,11 +147,11 @@ function WatchPage() {
                     <div className="w-56 font-bold line-clamp-2">
                       {rcm.title}
                     </div>
-                    <div className="truncate w-56 text-base-300">
+                    <div className="truncate w-56 text-xs text-secondary">
                       {rcm.author}
                     </div>
-                    <div className="truncate w-56">
-                      {rcm.viewCount?.toLocaleString()} lượt xem
+                    <div className="truncate w-56 text-xs text-secondary">
+                      {rcm.viewCount?.toLocaleString("vi-VN")} lượt xem
                     </div>
                   </div>
                 </div>
