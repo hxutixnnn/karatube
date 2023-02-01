@@ -4,6 +4,8 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { useQuery } from "react-query";
 import { VideoResponse } from "../types/invidious";
+import { useLocalStorage } from "react-use";
+import { useEffect } from "react";
 
 axios.interceptors.request.use(function (config) {
   /**
@@ -26,12 +28,33 @@ const skeleton = Array.from({ length: 7 }).map((_, i) => i);
 
 function WatchPage() {
   const router = useRouter();
+  const [cacheVideoId, setCacheVideoId] = useLocalStorage(
+    "videoId",
+    "4lNAEnqZ7XA"
+  );
   const { v: videoId } = router.query as { v: string };
+
+  function goToVideo(videoId: string) {
+    setCacheVideoId(videoId);
+    return router.push({ pathname: router.pathname, query: { v: videoId } });
+  }
+
+  useEffect(() => {
+    if (cacheVideoId && !videoId) {
+      goToVideo(cacheVideoId);
+    }
+  }, [cacheVideoId, videoId]);
 
   const { data, isLoading, isError } = useQuery(
     ["videoInfo", videoId],
     () => getVideoInfo(videoId),
-    { enabled: !!videoId }
+    {
+      enabled: !!videoId,
+      staleTime: Infinity,
+      // refetchOnMount: false,
+      // refetchOnWindowFocus: false,
+      // refetchOnReconnect: false,
+    }
   );
 
   const { recommendedVideos = [] } = data || {};
@@ -85,13 +108,7 @@ function WatchPage() {
                 <div
                   key={rcm.videoId}
                   className="flex flex-row gap-2 cursor-pointer"
-                  onClick={() =>
-                    history.pushState(
-                      {},
-                      "",
-                      location.pathname + "?v=" + rcm.videoId
-                    )
-                  }
+                  onClick={() => goToVideo(rcm.videoId)}
                 >
                   <Image
                     unoptimized

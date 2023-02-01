@@ -1,8 +1,8 @@
+import { useRouter } from "next/router";
 import { useEffect } from "react";
 
 export default function HomePage() {
-  useEffect(() => {
-    window.location.replace("/watch?v=4lNAEnqZ7XA");
-  });
+  const router = useRouter();
+  useEffect(() => router.push("/watch"), []);
   return null;
 }
