@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import { useQuery } from "react-query";
 import { VideoResponse } from "../types/invidious";
 import { useLocalStorage } from "react-use";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 axios.interceptors.request.use(function (config) {
   /**
@@ -27,6 +27,7 @@ const getVideoInfo = async (videoId: string) => {
 const skeleton = Array.from({ length: 7 }).map((_, i) => i);
 
 function WatchPage() {
+  const [isDark, setIsDark] = useState(false);
   const router = useRouter();
   const [cacheVideoId, setCacheVideoId] = useLocalStorage(
     "videoId",
@@ -67,14 +68,21 @@ function WatchPage() {
 
   return (
     <div
-      data-theme={true ? "light" : "dark"}
+      data-theme={!isDark ? "light" : "dark"}
       className="text-sm w-full min-h-screen"
     >
-      <header className="flex flex-col items-center py-4 absolute inset-x-0 z-[100]">
+      <header className="flex flex-row justify-between items-center py-4 absolute inset-x-0 z-[100]">
+        <div />
         <input
           type="text"
           placeholder="Type here"
           className="input input-bordered w-full max-w-xs"
+        />
+        <input
+          type="checkbox"
+          className="toggle"
+          checked={isDark}
+          onChange={(e) => setIsDark(e.target.checked)}
         />
       </header>
       <main className="container mx-auto pt-24">
@@ -90,7 +98,7 @@ function WatchPage() {
             />
             <div className="flex flex-col gap-1">
               <h1 className="text-xl">{title}</h1>
-              <div className="border-t my-2" />
+              <div className="border-t border-base-300 my-2" />
               <div className="flex flex-row gap-3">
                 <Image
                   unoptimized
