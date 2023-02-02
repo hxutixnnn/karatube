@@ -3,6 +3,8 @@ import { useEffect } from "react";
 
 export default function HomePage() {
   const router = useRouter();
-  useEffect(() => router.push("/watch"), []);
+  useEffect(() => {
+    router.push("/karaoke");
+  }, []);
   return null;
 }
