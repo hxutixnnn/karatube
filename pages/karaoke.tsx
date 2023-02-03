@@ -67,14 +67,19 @@ function WatchPage() {
   const { recommendedVideos = [] } = data || {};
 
   const iframeUrl = new URL(videoId, "https://www.youtube.com/embed/");
-  iframeUrl.searchParams.append("autoplay", "1");
-  iframeUrl.searchParams.append("controls", "0");
-  iframeUrl.searchParams.append("disablekb", "1");
-  iframeUrl.searchParams.append("enablejsapi", "1");
-  iframeUrl.searchParams.append("modestbranding", "1");
-  iframeUrl.searchParams.append("playsinline", "1");
+  const params = new URLSearchParams({
+    autoplay: "1",
+    controls: "0",
+    disablekb: "1",
+    enablejsapi: "1",
+    modestbranding: "1",
+    playsinline: "1",
+  });
+  iframeUrl.search = params.toString();
 
   const [searchTerm, setSearchTerm] = useState("");
+
+  const breakpoint = "md";
 
   return (
     <div
@@ -82,8 +87,10 @@ function WatchPage() {
       className="text-sm w-full max-h-screen overflow-hidden"
     >
       <main className="">
-        <div className="flex flex-col xl:flex-row">
-          <div className="flex flex-col w-full h-screen xl:pb-0 pb-20">
+        <div className={`flex flex-col ${breakpoint}:flex-row`}>
+          <div
+            className={`flex flex-col w-full h-screen ${breakpoint}:pb-0 pb-20`}
+          >
             <div className="flex flex-row gap-2 p-1 justify-between items-center bg-primary">
               <div className="dropdown flex-1">
                 <div className="form-control">
@@ -116,23 +123,22 @@ function WatchPage() {
             <div className="relative flex flex-row gap-4 w-full flex-wrap overflow-y-auto max-h-full p-4 bg-base-300 scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-300 scrollbar-thumb-rounded hover:scrollbar-track-gray-400">
               {/* Video Row Item */}
               {recommendedVideos?.map((rcm) => {
-                const thumbnail = rcm.videoThumbnails?.[4];
                 return (
                   <div
                     key={rcm.videoId}
-                    className="card bg-white rounded-md shadow-md cursor-pointer flex-auto w-1/3 md:w-1/4"
+                    className="card bg-white rounded-md shadow-md cursor-pointer flex-auto w-1/3 lg:w-1/4 xl:w-1/5"
                     onClick={() => goToVideo(rcm.videoId)}
                   >
                     <figure className="relative w-full aspect-video">
                       <Image
                         unoptimized
+                        src={`/api/image/${rcm.videoId}/mqdefault.jpg`}
                         priority
-                        src={thumbnail?.url}
-                        alt={thumbnail?.quality}
-                        width={160}
-                        height={90}
+                        alt={rcm.title}
                         layout="fill"
                         className="bg-base-300"
+                        placeholder="blur"
+                        blurDataURL={`/api/image/${rcm.videoId}/default.jpg`}
                       />
                     </figure>
                     <div className="card-body p-4">
@@ -152,13 +158,15 @@ function WatchPage() {
           </div>
           {/* END Recommend Videos List */}
           {/* Video Player */}
-          <div className="absolute bottom-0 left-0 right-0 h-20 flex flex-row xl:flex-col xl:static gap-1">
+          <div
+            className={`absolute bottom-0 left-0 right-0 h-20 flex flex-row ${breakpoint}:flex-col ${breakpoint}:static gap-1`}
+          >
             <iframe
-              src={iframeUrl.toString()}
+              src={iframeUrl.href}
               title="YouTube video player"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               allowFullScreen
-              className="bg-base-300 w-auto xl:w-full aspect-video"
+              className={`bg-base-300 w-auto ${breakpoint}:w-full aspect-video`}
             />
             <div className="flex flex-row gap-1 px-1 ml-auto items-center">
               {[
@@ -185,7 +193,7 @@ function WatchPage() {
               ].map((btn) => (
                 <button
                   key={btn.label}
-                  className="btn btn-ghost text-primary flex xl:gap-1 h-16 xl:h-20 w-16 overflow-hidden xl:w-20 text-[10px] xl:text-xs p-0 hover:bg-base-200"
+                  className={`btn btn-ghost text-primary flex ${breakpoint}:gap-1 h-16 ${breakpoint}:h-20 w-16 overflow-hidden ${breakpoint}:w-20 text-[10px] ${breakpoint}:text-xs p-0 hover:bg-base-200`}
                 >
                   <btn.icon className="w-10 h-10" />
                   {btn.label}
