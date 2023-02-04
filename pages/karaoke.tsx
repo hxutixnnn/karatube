@@ -52,6 +52,8 @@ function WatchPage() {
     }
   }, [cacheVideoId, videoId]);
 
+  const [searchTerm, setSearchTerm] = useState("");
+
   const { data, isLoading, isError } = useQuery(
     ["videoInfo", videoId],
     () => getVideoInfo(videoId),
@@ -76,8 +78,6 @@ function WatchPage() {
     playsinline: "1",
   });
   iframeUrl.search = params.toString();
-
-  const [searchTerm, setSearchTerm] = useState("");
 
   const breakpoint = "md";
 
@@ -120,8 +120,13 @@ function WatchPage() {
               </div>
             </div>
             {/* Recommend Videos List */}
-            <div className="relative flex flex-row gap-4 w-full flex-wrap overflow-y-auto max-h-full p-4 bg-base-300 scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-300 scrollbar-thumb-rounded hover:scrollbar-track-gray-400">
+            <div className="relative flex flex-row gap-4 w-full flex-wrap overflow-y-auto h-full p-4 bg-base-300 scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-300 scrollbar-thumb-rounded hover:scrollbar-track-gray-400">
               {/* Video Row Item */}
+              {!recommendedVideos?.length && (
+                <div className="text-secondary text-center w-full">
+                  Danh sách gợi ý rỗng.
+                </div>
+              )}
               {recommendedVideos?.map((rcm) => {
                 return (
                   <div
