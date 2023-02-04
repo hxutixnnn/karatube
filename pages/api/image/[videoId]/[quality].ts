@@ -1,6 +1,9 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
 
+// const origin = 'invidious.drivet.xyz';
+const origin = "yt.funami.tech";
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -14,15 +17,16 @@ export default async function handler(
 
   try {
     const data = await fetch(
-      `https://invidious.drivet.xyz/vi/${videoId}/${rawQuality}.jpg`
+      `https://${origin}/vi/${videoId}/${rawQuality}.jpg`
     );
 
     data.headers.forEach((value, name) => res.setHeader(name, value));
 
-    res
-      .status(data.status)
-      .setHeader("Cache-Control", "max-age=31536000, immutable")
-      .send(data.body);
+    if (data.status === 200) {
+      res.setHeader("Cache-Control", "max-age=31536000, immutable");
+    }
+
+    res.status(data.status).send(data.body);
   } catch (error) {
     res.status(500).json({ error: "failed to load data" });
   }

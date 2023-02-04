@@ -63,17 +63,10 @@ export interface FormatStream {
   size: string;
 }
 
-export interface VideoThumbnail2 {
-  quality: string;
-  url: string;
-  width: number;
-  height: number;
-}
-
 export interface RecommendedVideo {
   videoId: string;
   title: string;
-  videoThumbnails: VideoThumbnail2[];
+  videoThumbnails: VideoThumbnail[];
   author: string;
   authorUrl: string;
   authorId: string;
@@ -118,4 +111,23 @@ export interface VideoResponse {
   formatStreams: FormatStream[];
   captions: any[];
   recommendedVideos: RecommendedVideo[];
+}
+
+export interface SearchResult {
+  type: string;
+  title: string;
+  videoId: string;
+  author: string;
+  authorId: string;
+  authorUrl: string;
+  videoThumbnails: VideoThumbnail[];
+  description: string;
+  descriptionHtml: string;
+  viewCount: number;
+  published: number;
+  publishedText: string;
+  lengthSeconds: number;
+  liveNow: boolean;
+  premium: boolean;
+  isUpcoming: boolean;
 }
