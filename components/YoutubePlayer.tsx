@@ -126,7 +126,7 @@ function YoutubePlayer({ videoId, nextSong }) {
       className={`flex flex-col ${isFullscreen ? "bg-black" : "bg-white"}`}
     >
       <div
-        className="relative flex flex-row items-center justify-center flex-1"
+        className="relative flex flex-row items-center justify-center overflow-hidden"
         onClick={toggleFullscreen}
       >
         <YouTube
