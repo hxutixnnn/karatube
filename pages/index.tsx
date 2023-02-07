@@ -84,10 +84,10 @@ function HomePage() {
       data-theme="light"
       className="text-sm w-full max-h-screen overflow-hidden"
     >
-      <main className="bg-base-300">
-        <div className="flex flex-row">
+      <main className="bg-base-300 h-full">
+        <div className="flex flex-col md:flex-row h-screen">
           {/* START Recommend Videos List */}
-          <div className="flex flex-col w-full h-screen">
+          <div className="flex flex-col flex-1 overflow-y-auto">
             <div className="flex flex-row gap-2 p-1 justify-between items-center bg-primary">
               {/* START Search Bar */}
               <div className="form-control flex-1">
@@ -225,7 +225,7 @@ function HomePage() {
           </div>
           {/* END Recommend Videos List */}
           {/* Video Player */}
-          <div className="flex flex-col w-full max-w-[400px] h-screen overflow-hidden">
+          <div className="flex flex-col flex-shrink-0 w-full max-w-[400px] h-1/2 md:h-screen overflow-hidden">
             <YoutubePlayer
               videoId={curVideoId || "gkkw1oXSV4M"} // TODO: make a video instruction and put it here
               nextSong={() => setCurVideoId("")}
