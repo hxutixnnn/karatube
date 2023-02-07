@@ -2,6 +2,7 @@ import Head from "next/head";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import "../styles/global.css";
+import Script from "next/script";
 
 // Create a client
 const queryClient = new QueryClient();
@@ -59,6 +60,19 @@ function App({ Component, pageProps }) {
       <QueryClientProvider client={queryClient}>
         <ReactQueryDevtools />
         <Component {...pageProps} />
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-DTYZ1GLQQC"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){window.dataLayer.push(arguments);}
+          gtag('js', new Date());
+
+          gtag('config', 'G-DTYZ1GLQQC');
+        `}
+        </Script>
       </QueryClientProvider>
     </>
   );
