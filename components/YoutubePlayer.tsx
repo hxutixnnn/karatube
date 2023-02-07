@@ -1,6 +1,5 @@
 import {
   ArrowUturnLeftIcon,
-  BackwardIcon,
   ForwardIcon,
   PauseIcon,
   PlayIcon,
@@ -8,34 +7,39 @@ import {
   SpeakerXMarkIcon,
 } from "@heroicons/react/20/solid";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useFullscreen, usePromise, useToggle } from "react-use";
 import YouTube from "react-youtube";
-import PlayerStates from "youtube-player/dist/constants/PlayerStates";
 
-export function YoutubePlayer({ videoId }) {
-  const youtubePlayer = useRef<YouTube>();
-  const [playerState, setPlayerState] = useState<PlayerStates>();
+function YoutubePlayer({ videoId, nextSong }) {
+  const playerRef = useRef<YouTube>();
+  const fullscreenRef = useRef<HTMLDivElement>();
+  const [show, toggleFullscreen] = useToggle(false);
+  const isFullscreen = useFullscreen(fullscreenRef, show, {
+    onClose: () => toggleFullscreen(false),
+  });
+  const [playerState, setPlayerState] = useState<number>();
 
-  const [isFullscreen, setIsFullscreen] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
+  const mounted = usePromise();
 
   useEffect(() => {
-    setIsFullscreen(!!document.fullscreenElement);
-    youtubePlayer.current
-      ?.getInternalPlayer()
-      .isMuted()
-      .then(setIsMuted)
-      .catch((err) => console.log("[isMuted]", err));
+    (async () => {
+      const player = playerRef.current?.getInternalPlayer();
+      const muteState = await mounted(player.isMuted());
+      // This line will not execute if this component gets unmounted.
+      setIsMuted(muteState);
+    })();
   }, []);
 
   const playPauseBtn = useMemo(
     () => [
-      playerState === PlayerStates.PLAYING
+      playerState === YouTube.PlayerState.PLAYING
         ? {
             icon: PauseIcon,
             label: "Dừng",
             onClick: async () => {
               try {
-                const player = youtubePlayer.current?.getInternalPlayer();
+                const player = playerRef.current?.getInternalPlayer();
                 setPlayerState(await player.getPlayerState());
                 await player.pauseVideo();
               } catch (error) {
@@ -48,7 +52,7 @@ export function YoutubePlayer({ videoId }) {
             label: "Phát",
             onClick: async () => {
               try {
-                const player = youtubePlayer.current?.getInternalPlayer();
+                const player = playerRef.current?.getInternalPlayer();
                 setPlayerState(await player.getPlayerState());
                 await player.playVideo();
               } catch (error) {
@@ -67,7 +71,7 @@ export function YoutubePlayer({ videoId }) {
             label: "Tắt tiếng",
             onClick: async () => {
               try {
-                const player = youtubePlayer.current?.getInternalPlayer();
+                const player = playerRef.current?.getInternalPlayer();
                 await player.mute();
                 setIsMuted(true);
               } catch (error) {
@@ -80,7 +84,7 @@ export function YoutubePlayer({ videoId }) {
             label: "Mở tiếng",
             onClick: async () => {
               try {
-                const player = youtubePlayer.current?.getInternalPlayer();
+                const player = playerRef.current?.getInternalPlayer();
                 await player.unMute();
                 setIsMuted(false);
               } catch (error) {
@@ -95,35 +99,16 @@ export function YoutubePlayer({ videoId }) {
   const playerBtns = useMemo(
     () => [
       {
-        icon: BackwardIcon,
-        label: "Bài trước",
-        onClick: async () => {
-          try {
-            const player = youtubePlayer.current?.getInternalPlayer();
-            await player.previousVideo();
-          } catch (error) {
-            console.log(error);
-          }
-        },
-      },
-      {
         icon: ForwardIcon,
         label: "Qua bài",
-        onClick: async () => {
-          try {
-            const player = youtubePlayer.current?.getInternalPlayer();
-            await player.nextVideo();
-          } catch (error) {
-            console.log(error);
-          }
-        },
+        onClick: nextSong,
       },
       {
         icon: ArrowUturnLeftIcon,
         label: "Hát lại",
         onClick: async () => {
           try {
-            const player = youtubePlayer.current?.getInternalPlayer();
+            const player = playerRef.current?.getInternalPlayer();
             await player.seekTo(0, true);
           } catch (error) {
             console.log(error);
@@ -131,68 +116,60 @@ export function YoutubePlayer({ videoId }) {
         },
       },
     ],
-    []
+    [nextSong]
   );
 
   return (
-    <div className="flex flex-col gap-1 min-w-[400px]">
-      <div id="youtubePlayer" className="flex flex-col bg-white">
-        <div
-          className="flex flex-row items-center justify-center flex-1 bg-black"
-          onClick={async () => {
-            if (!document.fullscreenElement) {
-              const playerElement = document.getElementById("youtubePlayer");
-              const requestFullScreen = playerElement.requestFullscreen;
-              // || playerElement.mozRequestFullscreen
-              // || playerElement.webkitRequestFullscreen;
-              if (requestFullScreen) {
-                await requestFullScreen.bind(playerElement)();
-              }
-            } else {
-              await document.exitFullscreen();
-            }
+    <div
+      ref={fullscreenRef}
+      id="youtubePlayer"
+      className={`flex flex-col ${isFullscreen ? "bg-black" : "bg-white"}`}
+    >
+      <div
+        className="relative flex flex-row items-center justify-center flex-1"
+        onClick={toggleFullscreen}
+      >
+        <YouTube
+          ref={playerRef}
+          videoId={videoId}
+          className={`w-full aspect-video min-h-[200px] ${
+            !isFullscreen ? "cursor-zoom-in" : "cursor-zoom-out"
+          }`}
+          iframeClassName={`w-full h-full pointer-events-none ${
+            !videoId ? "hidden" : ""
+          }`}
+          style={{ width: "100%", height: "100%" }}
+          loading="lazy"
+          opts={{
+            playerVars: {
+              autoplay: 1,
+              controls: 0,
+              disablekb: 1,
+              enablejsapi: 1,
+              modestbranding: 1,
+              playsinline: 1,
+            },
           }}
-        >
-          <YouTube
-            ref={youtubePlayer}
-            videoId={videoId}
-            //id="youtubePlayer"
-            className={`bg-base-300 w-full aspect-video ${
-              !isFullscreen ? "cursor-zoom-in" : "cursor-zoom-out"
-            }`}
-            iframeClassName="w-full h-full pointer-events-none"
-            loading="lazy"
-            opts={{
-              playerVars: {
-                autoplay: 1,
-                controls: 0,
-                disablekb: 1,
-                enablejsapi: 1,
-                modestbranding: 1,
-                playsinline: 1,
-              },
-            }}
-            onStateChange={async (ev) =>
-              setPlayerState(await ev.target.getPlayerState())
-            }
-          />
-        </div>
-        <div className="flex flex-row justify-evenly w-full p-1 items-center">
-          {playPauseBtn.concat(playerBtns, muteBtn).map((btn) => (
-            <button
-              key={btn.label}
-              className={`btn btn-ghost text-primary flex h-16 w-16 overflow-hidden text-[10px] p-0 hover:bg-base-200`}
-              onClick={btn.onClick}
-            >
-              <btn.icon className="w-10 h-10" />
-              {btn.label}
-            </button>
-          ))}
-        </div>
+          onStateChange={async (ev) =>
+            setPlayerState(await ev.target.getPlayerState())
+          }
+          onEnd={nextSong}
+        />
       </div>
-      <div className="flex flex-col p-2">
-        <div className="font-bold text-primary">BÀI KẾ TIẾP (0)</div>
+      <div className="flex flex-row w-full p-1 items-center">
+        {playPauseBtn.concat(playerBtns, muteBtn).map((btn) => (
+          <button
+            key={btn.label}
+            className="btn btn-ghost text-primary flex h-16 flex-col flex-1 overflow-hidden text-[10px] p-0 hover:bg-base-200"
+            onClick={btn.onClick}
+          >
+            <btn.icon className="w-10 h-10" />
+            {btn.label}
+          </button>
+        ))}
       </div>
     </div>
   );
 }
+
+export default YoutubePlayer;
