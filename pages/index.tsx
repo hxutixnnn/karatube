@@ -146,70 +146,68 @@ function HomePage() {
               {(searchTerm ? searchResults : recommendedVideos)?.map(
                 (rcm: SearchResult | RecommendedVideo) => {
                   return (
-                    <Fragment key={rcm.videoId}>
+                    <Fragment key={rcm?.videoId}>
                       {/* The button to open modal */}
-                      <label htmlFor={`modal-video-${rcm.videoId}`}>
+                      <label htmlFor={`modal-video-${rcm?.videoId}`}>
                         <div className="card overflow-hidden bg-white shadow hover:shadow-md cursor-pointer flex-auto">
                           <figure className="relative w-full aspect-video min-h-[150px]">
                             <Image
                               unoptimized
-                              src={`https://yt.funami.tech/vi/${rcm.videoId}/mqdefault.jpg`}
+                              src={`https://yt.funami.tech/vi/${rcm?.videoId}/mqdefault.jpg`}
                               priority
-                              alt={rcm.title}
+                              alt={rcm?.title}
                               layout="fill"
                               className="bg-gray-400"
                               // placeholder="blur"
-                              // blurDataURL={`https://yt.funami.tech/vi/${rcm.videoId}/default.jpg`}
+                              // blurDataURL={`https://yt.funami.tech/vi/${rcm?.videoId}/default.jpg`}
                             />
                           </figure>
                           <div className="card-body p-2">
                             <h2 className="font-semibold text-sm line-clamp-2">
-                              {rcm.title}
+                              {rcm?.title}
                             </h2>
-                            <p className="text-xs truncate">{rcm.author}</p>
+                            <p className="text-xs truncate">{rcm?.author}</p>
                           </div>
                         </div>
                       </label>
 
                       <input
                         type="checkbox"
-                        id={`modal-video-${rcm.videoId}`}
+                        id={`modal-video-${rcm?.videoId}`}
                         className="modal-toggle"
                       />
                       <label
-                        htmlFor={`modal-video-${rcm.videoId}`}
+                        htmlFor={`modal-video-${rcm?.videoId}`}
                         className="modal cursor-pointer"
                       >
                         <label className="modal-box relative p-2" htmlFor="">
                           <div className="card gap-2">
-                            <h2 className="card-title text-sm">{rcm.title}</h2>
+                            <h2 className="card-title text-sm">{rcm?.title}</h2>
                             <figure className="relative w-full aspect-video min-h-[250px]">
                               <Image
                                 unoptimized
-                                src={`/api/image/${rcm.videoId}/mqdefault.jpg`}
+                                src={`https://yt.funami.tech/vi/${rcm?.videoId}/mqdefault.jpg`}
                                 priority
-                                alt={rcm.title}
+                                alt={rcm?.title}
                                 layout="fill"
                                 className="bg-gray-400"
-                                // placeholder="blur"
-                                // blurDataURL={`/api/image/${rcm.videoId}/default.jpg`}
                               />
                             </figure>
                             <div className="card-body p-0">
                               <div className="card-actions">
                                 <label
-                                  htmlFor={`modal-video-${rcm.videoId}`}
+                                  htmlFor={`modal-video-${rcm?.videoId}`}
                                   className="btn btn-primary flex-1"
                                   onClick={() =>
-                                    addVideoToPlaylist(rcm.videoId)
+                                    addVideoToPlaylist(rcm?.videoId)
                                   }
                                 >
                                   Chọn
                                 </label>
                                 <label
-                                  htmlFor={`modal-video-${rcm.videoId}`}
+                                  htmlFor={`modal-video-${rcm?.videoId}`}
                                   className="btn btn-primary flex-1"
-                                  onClick={() => priorityVideo(rcm.videoId)}
+                                  onClick={() => priorityVideo(rcm?.videoId)}
                                 >
                                   Ưu tiên
                                 </label>
@@ -297,8 +295,6 @@ function VideoHorizontalCard({
               alt={data?.title}
               layout="fill"
               className="bg-gray-400"
-              placeholder="blur"
-              blurDataURL={`https://yt.funami.tech/vi/${data?.videoId}/default.jpg`}
             />
           ) : (
             <div className="bg-gray-300 animate-pulse h-full w-full" />
