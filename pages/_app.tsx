@@ -1,5 +1,6 @@
 import Head from "next/head";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { ReactQueryDevtools } from "react-query/devtools";
 import "../styles/global.css";
 import Script from "next/script";
 
@@ -50,21 +51,26 @@ function App({ Component, pageProps }) {
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
       </Head>
-      <QueryClientProvider client={queryClient}>
-        <Component {...pageProps} />
-        <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-DTYZ1GLQQC"
-          strategy="afterInteractive"
-        />
-        <Script id="google-analytics" strategy="afterInteractive">
-          {`
+      {process.env.NODE_ENV !== "production" ? null : (
+        <>
+          <Script
+            src="https://www.googletagmanager.com/gtag/js?id=G-DTYZ1GLQQC"
+            strategy="afterInteractive"
+          />
+          <Script id="google-analytics" strategy="afterInteractive">
+            {`
           window.dataLayer = window.dataLayer || [];
           function gtag(){window.dataLayer.push(arguments);}
           gtag('js', new Date());
 
           gtag('config', 'G-DTYZ1GLQQC');
         `}
-        </Script>
+          </Script>
+        </>
+      )}
+      <QueryClientProvider client={queryClient}>
+        <Component {...pageProps} />
+        <ReactQueryDevtools />
       </QueryClientProvider>
     </>
   );
