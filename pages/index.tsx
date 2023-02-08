@@ -25,6 +25,11 @@ function HomePage() {
 
   function priorityVideo(videoId: string) {
     setCurVideoId(videoId);
+    // move `videoId` to the top of the playlist
+    const newPlaylist = playlist.filter((id) => id !== videoId);
+    if (playlist.length > newPlaylist.length) {
+      setPlaylist([videoId, ...newPlaylist]);
+    }
   }
 
   const [searchTerm, setSearchTerm] = useState("nhạc trẻ");
@@ -150,7 +155,7 @@ function HomePage() {
                       {/* The button to open modal */}
                       <label htmlFor={`modal-video-${rcm?.videoId}`}>
                         <div className="card overflow-hidden bg-white shadow hover:shadow-md cursor-pointer flex-auto">
-                          <figure className="relative w-full aspect-video min-h-[150px]">
+                          <figure className="relative w-full aspect-video">
                             <Image
                               unoptimized
                               src={`https://yt.funami.tech/vi/${rcm?.videoId}/mqdefault.jpg`}
@@ -183,7 +188,7 @@ function HomePage() {
                         <label className="modal-box relative p-2" htmlFor="">
                           <div className="card gap-2">
                             <h2 className="card-title text-sm">{rcm?.title}</h2>
-                            <figure className="relative w-full aspect-video min-h-[250px]">
+                            <figure className="relative w-full aspect-video">
                               <Image
                                 unoptimized
                                 src={`https://yt.funami.tech/vi/${rcm?.videoId}/mqdefault.jpg`}
@@ -227,7 +232,7 @@ function HomePage() {
           {/* Video Player */}
           <div className="flex flex-col flex-shrink-0 w-full max-w-[400px] h-1/2 md:h-screen overflow-hidden">
             <YoutubePlayer
-              videoId={curVideoId || "gkkw1oXSV4M"} // TODO: make a video instruction and put it here
+              videoId={curVideoId} // TODO: make a video instruction and put it here
               nextSong={() => setCurVideoId("")}
             />
             <div className="h-full p-2 overflow-hidden">
