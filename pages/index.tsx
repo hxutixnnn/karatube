@@ -13,6 +13,7 @@ function HomePage() {
 
   useEffect(() => {
     if (playlist.length && !curVideoId) {
+      // playing first video from playlist
       const [videoId, ...newPlaylist] = playlist;
       setCurVideoId(videoId);
       setPlaylist(newPlaylist);
@@ -24,7 +25,6 @@ function HomePage() {
   }
 
   function priorityVideo(videoId: string) {
-    setCurVideoId(videoId);
     // move `videoId` to the top of the playlist
     const newPlaylist = playlist.filter((id) => id !== videoId);
     if (playlist.length > newPlaylist.length) {
