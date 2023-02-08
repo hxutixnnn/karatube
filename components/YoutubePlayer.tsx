@@ -11,7 +11,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useFullscreen, usePromise, useToggle } from "react-use";
 import YouTube from "react-youtube";
 
-function YoutubePlayer({ videoId, nextSong }) {
+function YoutubePlayer({ videoId, nextSong, className = "", extra = null }) {
   const playerRef = useRef<YouTube>();
   const fullscreenRef = useRef<HTMLDivElement>();
   const [show, toggleFullscreen] = useToggle(false);
@@ -26,9 +26,11 @@ function YoutubePlayer({ videoId, nextSong }) {
   useEffect(() => {
     (async () => {
       const player = playerRef.current?.getInternalPlayer();
-      const muteState = await mounted(player.isMuted());
-      // This line will not execute if this component gets unmounted.
-      setIsMuted(muteState);
+      if (player) {
+        const muteState = await mounted(player.isMuted());
+        // This line will not execute if this component gets unmounted.
+        setIsMuted(muteState);
+      }
     })();
   }, []);
 
@@ -124,48 +126,46 @@ function YoutubePlayer({ videoId, nextSong }) {
     <div
       ref={fullscreenRef}
       id="youtubePlayer"
-      className={`flex flex-col ${isFullscreen ? "bg-black" : "bg-white"}`}
+      className={`${isFullscreen ? "bg-black" : "bg-white"} ${className}`}
     >
       <div
-        className="relative flex flex-row items-center justify-center overflow-hidden"
+        className="w-full aspect-video relative flex-1 md:flex-grow-1"
         onClick={toggleFullscreen}
       >
-        <YouTube
-          ref={playerRef}
-          videoId={videoId}
-          className={`w-full aspect-video min-h-[200px] bg-black ${
-            !isFullscreen ? "cursor-zoom-in" : "cursor-zoom-out"
-          } ${!videoId ? "hidden" : ""}`}
-          iframeClassName={`w-full h-full pointer-events-none`}
-          style={{ width: "100%", height: "100%" }}
-          loading="lazy"
-          opts={{
-            playerVars: {
-              autoplay: 1,
-              controls: 0,
-              disablekb: 1,
-              enablejsapi: 1,
-              modestbranding: 1,
-              playsinline: 1,
-            },
-          }}
-          onStateChange={async (ev) =>
-            setPlayerState(await ev.target.getPlayerState())
-          }
-          onEnd={nextSong}
-        />
-        {!videoId && (
-          <div className="w-full aspect-video min-h-[200px] flex items-center justify-center bg-black">
-            <Image
-              src="/icon-192.png"
-              width={96}
-              height={96}
-              className="flex-grow-0 flex-shrink-0"
-            />
+        {!videoId ? (
+          <div className="h-full w-full flex items-center justify-center bg-black">
+            <Image src="/icon-192.png" width={48} height={48} className="" />
           </div>
+        ) : (
+          <YouTube
+            ref={playerRef}
+            videoId={videoId}
+            className={`w-full bg-black ${
+              !isFullscreen
+                ? "aspect-video cursor-zoom-in"
+                : "h-full cursor-zoom-out"
+            }`}
+            iframeClassName={`w-full h-full pointer-events-none`}
+            style={{ width: "100%", height: "100%" }}
+            loading="lazy"
+            opts={{
+              playerVars: {
+                autoplay: 1,
+                controls: 0,
+                disablekb: 1,
+                enablejsapi: 1,
+                modestbranding: 1,
+                playsinline: 1,
+              },
+            }}
+            onStateChange={async (ev) =>
+              setPlayerState(await ev.target.getPlayerState())
+            }
+            onEnd={nextSong}
+          />
         )}
       </div>
-      <div className="flex flex-row w-full p-1 items-center">
+      <div className="flex-shrink-0 flex flex-row md:w-full p-1 items-center">
         {playPauseBtn.concat(playerBtns, muteBtn).map((btn) => (
           <button
             key={btn.label}
@@ -176,6 +176,7 @@ function YoutubePlayer({ videoId, nextSong }) {
             {btn.label}
           </button>
         ))}
+        {extra}
       </div>
     </div>
   );

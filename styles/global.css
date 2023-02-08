@@ -2,20 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* *::-webkit-scrollbar {
-  display: none;
-} */
-
-@supports not (aspect-ratio: 16 / 9) {
-  .aspect-video::before {
-    float: left;
-    padding-top: 56.25%;
-    content: "";
-  }
-
-  .aspect-video::after {
-    display: block;
-    content: "";
-    clear: both;
-  }
+.aspect-video {
+  @apply aspect-w-16 aspect-h-9;
 }
