@@ -6,6 +6,7 @@ import {
   SpeakerWaveIcon,
   SpeakerXMarkIcon,
 } from "@heroicons/react/20/solid";
+import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useFullscreen, usePromise, useToggle } from "react-use";
 import YouTube from "react-youtube";
@@ -132,12 +133,10 @@ function YoutubePlayer({ videoId, nextSong }) {
         <YouTube
           ref={playerRef}
           videoId={videoId}
-          className={`w-full aspect-video min-h-[200px] ${
+          className={`w-full aspect-video min-h-[200px] bg-black ${
             !isFullscreen ? "cursor-zoom-in" : "cursor-zoom-out"
-          }`}
-          iframeClassName={`w-full h-full pointer-events-none ${
-            !videoId ? "hidden" : ""
-          }`}
+          } ${!videoId ? "hidden" : ""}`}
+          iframeClassName={`w-full h-full pointer-events-none`}
           style={{ width: "100%", height: "100%" }}
           loading="lazy"
           opts={{
@@ -155,6 +154,16 @@ function YoutubePlayer({ videoId, nextSong }) {
           }
           onEnd={nextSong}
         />
+        {!videoId && (
+          <div className="w-full aspect-video min-h-[200px] flex items-center justify-center bg-black">
+            <Image
+              src="/icon-192.png"
+              width={96}
+              height={96}
+              className="flex-grow-0 flex-shrink-0"
+            />
+          </div>
+        )}
       </div>
       <div className="flex flex-row w-full p-1 items-center">
         {playPauseBtn.concat(playerBtns, muteBtn).map((btn) => (
