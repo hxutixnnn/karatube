@@ -1,42 +1,52 @@
-import { MagnifyingGlassIcon, ListBulletIcon } from "@heroicons/react/20/solid";
+import { ListBulletIcon, MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 import Image from "next/image";
-import { Fragment, useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { useQuery } from "react-query";
+import { useLocalStorage } from "react-use";
 import DebouncedInput from "../components/DebouncedInput";
 import YoutubePlayer from "../components/YoutubePlayer";
 import { RecommendedVideo, SearchResult } from "../types/invidious";
 import { getSearchResult, getSkeletonItems, getVideoInfo } from "../utils/api";
 
+type PlaylistItem = (SearchResult | RecommendedVideo) & {
+  key: string;
+};
+
 function HomePage() {
-  const [playlist, setPlaylist] = useState<(SearchResult | RecommendedVideo)[]>(
+  const [playlist, setPlaylist] = useLocalStorage<PlaylistItem[]>(
+    "playlist",
     []
   );
-  const [curVideoId, setCurVideoId] = useState("");
+  const [curVideoId, setCurVideoId] = useLocalStorage("videoId", "");
   const [selectedVideo, setSelectedVideo] = useState<
     SearchResult | RecommendedVideo
   >();
 
   useEffect(() => {
     if (playlist.length && !curVideoId) {
-      // playing first video from playlist
+      // playing first video
       const [video, ...newPlaylist] = playlist;
       setCurVideoId(video.videoId);
+      // then remove it from playlist
       setPlaylist(newPlaylist);
     }
   }, [playlist, curVideoId]);
 
   function addVideoToPlaylist(video: SearchResult | RecommendedVideo) {
-    setPlaylist((playlist) => playlist.concat(video));
+    setPlaylist(playlist.concat([{ key: crypto.randomUUID(), ...video }]));
   }
 
-  function priorityVideo(video: SearchResult | RecommendedVideo) {
+  function priorityVideo(
+    video: SearchResult | RecommendedVideo,
+    videoIndex?: number
+  ) {
     if (!curVideoId) setCurVideoId(video.videoId);
     // move `videoId` to the top of the playlist
-    const newPlaylist = playlist.filter((v) => v.videoId !== video.videoId);
-    setPlaylist([video, ...newPlaylist]);
+    const newPlaylist = playlist.filter((_, index) => index !== videoIndex);
+    setPlaylist([{ key: crypto.randomUUID(), ...video }, ...newPlaylist]);
   }
 
-  const [searchTerm, setSearchTerm] = useState("nhạc trẻ");
+  const [searchTerm, setSearchTerm] = useLocalStorage("searchTerm", "actdm");
   const [isKaraoke, setIsKaraoke] = useState(true);
 
   const titleIncludesKaraoke = ({ title }) => {
@@ -67,7 +77,7 @@ function HomePage() {
     {
       enabled: !!searchTerm,
       staleTime: Infinity,
-      select: (results: (SearchResult | RecommendedVideo)[]) => {
+      select: (results) => {
         if (isKaraoke) {
           return results.filter(titleIncludesKaraoke);
         }
@@ -91,21 +101,44 @@ function HomePage() {
 
   const PlaylistScreen = (
     <>
-      <div className="font-bold text-primary">
-        BÀI KẾ TIẾP ({playlist.length})
+      <div className="flex flex-row font-bold">
+        <span className="text-primary">BÀI KẾ TIẾP ({playlist.length})</span>
+        {!playlist.length ? null : (
+          <div className="dropdown dropdown-end ml-auto">
+            <label tabIndex={0} className="btn btn-xs btn-ghost text-error">
+              Xóa tất cả
+            </label>
+            <div
+              tabIndex={0}
+              className="card compact dropdown-content shadow bg-white ring-1 ring-primary rounded-box w-60"
+            >
+              <div className="card-body">
+                <h2 className="card-title text-sm">
+                  Bạn có chắc muốn xóa tất cả bài hát?
+                </h2>
+                <div className="card-actions justify-end">
+                  <button
+                    className="btn btn-xs btn-ghost text-primary"
+                    onClick={() => setPlaylist([])}
+                  >
+                    Xóa
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
       <div
         className={`grid grid-flow-row auto-rows-max gap-2 py-2 h-full overflow-y-auto ${scrollbarCls}`}
       >
-        {playlist.map((video) => (
+        {playlist.map((video, videoIndex) => (
           <VideoHorizontalCard
-            key={video.videoId}
+            key={video.key}
             video={video}
-            onSelect={priorityVideo}
-            onDelete={(video) =>
-              setPlaylist((curPlaylist) =>
-                curPlaylist.filter((v) => v.videoId !== video.videoId)
-              )
+            onSelect={() => priorityVideo(video, videoIndex)}
+            onDelete={() =>
+              setPlaylist(playlist.filter((_, index) => index !== videoIndex))
             }
           />
         ))}
@@ -302,9 +335,9 @@ function HomePage() {
 }
 
 interface VideoHorizontalCardProps {
-  video: SearchResult | RecommendedVideo;
-  onSelect?: (video: SearchResult | RecommendedVideo) => void;
-  onDelete?: (video: SearchResult | RecommendedVideo) => void;
+  video: PlaylistItem;
+  onSelect?: (video: PlaylistItem) => void;
+  onDelete?: (video: PlaylistItem) => void;
 }
 
 function VideoHorizontalCard({
