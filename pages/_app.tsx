@@ -50,6 +50,8 @@ function App({ Component, pageProps }) {
         <meta property="twitter:image" content="/assets/og-image.png" />
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#ef4444" />
       </Head>
       {process.env.NODE_ENV !== "production" ? null : (
         <>
