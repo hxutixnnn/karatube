@@ -119,7 +119,7 @@ function HomePage() {
         <div className="flex flex-row gap-2 p-1 justify-between items-center bg-primary">
           <div className="form-control flex-1">
             <div className="input-group">
-              <span>
+              <span className="px-2 md:px-4">
                 <MagnifyingGlassIcon className="w-6 h-6" />
               </span>
               <DebouncedInput
@@ -134,7 +134,7 @@ function HomePage() {
             </div>
           </div>
           <div className="form-control">
-            <label className="cursor-pointer label flex-col">
+            <label className="cursor-pointer label flex-col md:flex-row">
               <input
                 type="checkbox"
                 className="toggle toggle-success"
@@ -222,7 +222,7 @@ function HomePage() {
       <input type="checkbox" id="modal-playlist" className="modal-toggle" />
       <label
         htmlFor="modal-playlist"
-        className="modal modal-bottom cursor-pointer"
+        className="modal modal-bottom md:modal-middle cursor-pointer"
       >
         <label
           className="flex flex-col modal-box max-h-[50%] overflow-hidden bg-base-300 p-2"
