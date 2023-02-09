@@ -17,7 +17,7 @@ function HomePage() {
     "playlist",
     []
   );
-  const [curVideoId, setCurVideoId] = useLocalStorage("videoId", "");
+  const [curVideoId, setCurVideoId] = useLocalStorage("videoId", ""); // TODO: make a video instruction and put it as a initial here
   const [selectedVideo, setSelectedVideo] = useState<
     SearchResult | RecommendedVideo
   >();
@@ -105,7 +105,10 @@ function HomePage() {
         <span className="text-primary">BÀI KẾ TIẾP ({playlist.length})</span>
         {!playlist.length ? null : (
           <div className="dropdown dropdown-end ml-auto">
-            <label tabIndex={0} className="btn btn-xs btn-ghost text-error">
+            <label
+              tabIndex={0}
+              className="btn btn-xs btn-ghost text-error 2xl:text-xl"
+            >
               Xóa tất cả
             </label>
             <div
@@ -113,12 +116,12 @@ function HomePage() {
               className="card compact dropdown-content shadow bg-white ring-1 ring-primary rounded-box w-60"
             >
               <div className="card-body">
-                <h2 className="card-title text-sm">
+                <h2 className="card-title text-sm 2xl:text-xl">
                   Bạn có chắc muốn xóa tất cả bài hát?
                 </h2>
                 <div className="card-actions justify-end">
                   <button
-                    className="btn btn-xs btn-ghost text-primary"
+                    className="btn btn-xs btn-ghost text-primary 2xl:text-xl"
                     onClick={() => setPlaylist([])}
                   >
                     Xóa
@@ -130,7 +133,7 @@ function HomePage() {
         )}
       </div>
       <div
-        className={`grid grid-flow-row auto-rows-max gap-2 py-2 h-full overflow-y-auto ${scrollbarCls}`}
+        className={`grid grid-cols-1 gap-2 py-2 h-full overflow-y-auto ${scrollbarCls}`}
       >
         {playlist.map((video, videoIndex) => (
           <VideoHorizontalCard
@@ -158,7 +161,7 @@ function HomePage() {
               <DebouncedInput
                 type="search"
                 placeholder="TÌM BÀI HÁT YOUTUBE"
-                className="input w-full appearance-none rounded-l"
+                className="input w-full appearance-none rounded-l xl:text-xl"
                 value={searchTerm}
                 debounceTime={1000}
                 onDebouncedChange={handleSearch}
@@ -181,7 +184,7 @@ function HomePage() {
           </div>
           <label
             htmlFor="modal-playlist"
-            className="btn btn-ghost text-primary-content flex-col gap-1 w-20 p-0"
+            className="btn btn-ghost text-primary-content flex-col gap-1 w-20 p-0 md:hidden"
           >
             <div className="relative">
               <ListBulletIcon className="h-6 w-6" />
@@ -201,7 +204,7 @@ function HomePage() {
           </div>
         )}
         <div
-          className={`relative grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 w-full overflow-y-auto h-full p-2 ${scrollbarCls}`}
+          className={`relative grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 w-full overflow-y-auto max-h-full p-2 ${scrollbarCls}`}
         >
           {/* Video Row Item */}
           {isLoading && (
@@ -236,10 +239,12 @@ function HomePage() {
                         />
                       </figure>
                       <div className="card-body p-2">
-                        <h2 className="font-semibold text-sm line-clamp-2">
+                        <h2 className="font-semibold text-sm 2xl:text-2xl line-clamp-2">
                           {rcm?.title}
                         </h2>
-                        <p className="text-xs truncate">{rcm?.author}</p>
+                        <p className="text-xs 2xl:text-xl truncate">
+                          {rcm?.author}
+                        </p>
                       </div>
                     </div>
                   </label>
@@ -247,7 +252,6 @@ function HomePage() {
               );
             }
           )}
-
           {/* END Video Row Item */}
         </div>
       </div>
@@ -309,7 +313,7 @@ function HomePage() {
   );
 
   return (
-    <div className="text-sm w-full max-h-screen overflow-hidden">
+    <div className="text-sm 2xl:text-xl w-full max-h-screen overflow-hidden">
       <main className="bg-base-300 h-full">
         <div className="relative flex flex-col md:flex-row h-screen overflow-hidden">
           {/* START Recommend Videos List */}
@@ -318,13 +322,13 @@ function HomePage() {
           </div>
           {/* END Recommend Videos List */}
           {/* Video Player */}
-          <div className="relative order-1 md:order-2 w-full flex flex-row md:flex-col flex-grow flex-shrink-0 md:max-w-[400px] md:h-screen overflow-hidden">
+          <div className="relative order-1 md:order-2 w-full flex flex-row md:flex-col flex-grow flex-shrink-0 md:max-w-[40vw] md:min-w-[400px] md:h-screen overflow-hidden">
             <YoutubePlayer
-              videoId={curVideoId} // TODO: make a video instruction and put it here
+              videoId={curVideoId}
               nextSong={() => setCurVideoId("")}
-              className="flex flex-col h-full flex-1"
+              className="flex flex-col flex-1 md:flex-grow-0"
             />
-            <div className="h-full w-full p-2 overflow-hidden hidden md:flex flex-col">
+            <div className="max-h-full w-full p-2 overflow-hidden hidden md:flex flex-col">
               {PlaylistScreen}
             </div>
           </div>
@@ -350,21 +354,23 @@ function VideoHorizontalCard({
       tabIndex={0}
       className="collapse bg-white shadow hover:shadow-md rounded cursor-pointer"
     >
-      <div className="collapse-title p-0 flex flex-row flex-1 overflow-hidden">
-        <figure className="relative flex-shrink-0 w-32">
+      <div className="collapse-title p-0 flex-1 grid grid-cols-3 overflow-hidden">
+        <figure className="relative w-full aspect-video">
           <Image
             unoptimized
             src={`https://yt.funami.tech/vi/${video?.videoId}/mqdefault.jpg`}
             priority
             alt={video?.title}
             layout="fill"
-            className="bg-gray-400"
+            className="bg-gray-400 col-span-1"
           />
         </figure>
 
-        <div className="flex flex-col p-2 overflow-hidden gap-2 flex-1">
-          <h2 className="font-semibold text-sm line-clamp-2">{video?.title}</h2>
-          <p className="text-xs truncate">{video?.author}</p>
+        <div className="col-span-2 flex flex-col p-[1vw] overflow-hidden gap-2">
+          <h2 className="font-semibold text-sm 2xl:text-2xl line-clamp-2">
+            {video?.title}
+          </h2>
+          <p className="text-xs 2xl:text-xl truncate">{video?.author}</p>
         </div>
       </div>
 
