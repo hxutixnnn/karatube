@@ -24,15 +24,21 @@ function YoutubePlayer({ videoId, nextSong, className = "", extra = null }) {
   const mounted = usePromise();
 
   useEffect(() => {
-    (async () => {
+    async function updatePlayerState() {
+      console.log("updatePlayerState");
+
       const player = playerRef.current?.getInternalPlayer();
-      if (player) {
-        const muteState = await mounted(player.isMuted());
-        // This line will not execute if this component gets unmounted.
-        setIsMuted(muteState);
-      }
-    })();
-  }, []);
+      if (!player) return;
+      const [muteState, playerState] = await mounted(
+        Promise.allSettled([player.isMuted(), player.getPlayerState()])
+      );
+      // These lines will not execute if this component gets unmounted.
+      if (muteState.status === "fulfilled") setIsMuted(muteState.value);
+      if (playerState.status === "fulfilled") setPlayerState(playerState.value);
+    }
+
+    updatePlayerState();
+  }, [videoId]);
 
   const playPauseBtn = useMemo(
     () => [
