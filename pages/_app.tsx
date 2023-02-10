@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import "../styles/global.css";
 import Script from "next/script";
+import { Analytics } from "@vercel/analytics/react";
 
 // Create a client
 const queryClient = new QueryClient();
@@ -74,6 +75,7 @@ function App({ Component, pageProps }) {
         <Component {...pageProps} />
         <ReactQueryDevtools />
       </QueryClientProvider>
+      <Analytics />
     </>
   );
 }
