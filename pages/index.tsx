@@ -133,18 +133,20 @@ function HomePage() {
         )}
       </div>
       <div
-        className={`grid grid-cols-1 gap-2 py-2 h-full overflow-y-auto ${scrollbarCls}`}
+        className={`flex-shrink-0 h-full overflow-y-auto pt-2 pb-12 ${scrollbarCls}`}
       >
-        {playlist.map((video, videoIndex) => (
-          <VideoHorizontalCard
-            key={video.key}
-            video={video}
-            onSelect={() => priorityVideo(video, videoIndex)}
-            onDelete={() =>
-              setPlaylist(playlist.filter((_, index) => index !== videoIndex))
-            }
-          />
-        ))}
+        <div className="grid grid-cols-1 gap-2">
+          {playlist.map((video, videoIndex) => (
+            <VideoHorizontalCard
+              key={video.key}
+              video={video}
+              onSelect={() => priorityVideo(video, videoIndex)}
+              onDelete={() =>
+                setPlaylist(playlist.filter((_, index) => index !== videoIndex))
+              }
+            />
+          ))}
+        </div>
       </div>
     </>
   );
@@ -170,15 +172,15 @@ function HomePage() {
             </div>
           </div>
           <div className="form-control">
-            <label className="cursor-pointer label flex-col md:flex-row">
+            <label className="cursor-pointer label flex-col lg:flex-row gap-1">
               <input
                 type="checkbox"
-                className="toggle toggle-success"
+                className="toggle toggle-success toggle-sm"
                 checked={isKaraoke}
                 onChange={(e) => setIsKaraoke(e.target.checked)}
               />
-              <span className="label-text text-primary-content ml-2">
-                Karaoke
+              <span className="label-text text-primary-content ml-2 text-xs 2xl:text-xl">
+                KARAOKE
               </span>
             </label>
           </div>
@@ -275,9 +277,11 @@ function HomePage() {
         htmlFor="modal-video"
         className="modal modal-bottom md:modal-middle cursor-pointer"
       >
-        <label className="modal-box relative p-2" htmlFor="">
+        <label className="modal-box relative px-2 py-4 pb-12 md:p-4" htmlFor="">
           <div className="card gap-2">
-            <h2 className="card-title text-sm">{selectedVideo?.title}</h2>
+            <h2 className="card-title text-sm 2xl:text-2xl">
+              {selectedVideo?.title}
+            </h2>
             <figure className="relative w-full aspect-video">
               <Image
                 unoptimized
@@ -292,14 +296,14 @@ function HomePage() {
               <div className="card-actions">
                 <label
                   htmlFor="modal-video"
-                  className="btn btn-primary flex-1"
+                  className="btn btn-primary flex-1 2xl:text-2xl"
                   onClick={() => addVideoToPlaylist(selectedVideo)}
                 >
                   Chọn
                 </label>
                 <label
                   htmlFor="modal-video"
-                  className="btn btn-primary flex-1"
+                  className="btn btn-primary flex-1 2xl:text-2xl"
                   onClick={() => priorityVideo(selectedVideo)}
                 >
                   Ưu tiên
@@ -377,13 +381,13 @@ function VideoHorizontalCard({
       <div className="collapse-content p-0">
         <div className="flex flex-row gap-1 px-2 pt-4 pb-0 border-t">
           <div
-            className="btn btn-sm btn-primary flex-1"
+            className="btn  btn-primary flex-1 2xl:text-2xl"
             onClick={() => onSelect(video)}
           >
             Ưu tiên
           </div>
           <div
-            className="btn btn-sm btn-ghost text-error flex-1"
+            className="btn  btn-ghost text-error flex-1 2xl:text-2xl"
             onClick={() => onDelete(video)}
           >
             Xóa khỏi danh sách

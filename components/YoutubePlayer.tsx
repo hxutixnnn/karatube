@@ -169,7 +169,7 @@ function YoutubePlayer({ videoId, nextSong, className = "", extra = null }) {
         {playPauseBtn.concat(playerBtns, muteBtn).map((btn) => (
           <button
             key={btn.label}
-            className="btn btn-ghost text-primary flex h-16 flex-col flex-1 overflow-hidden text-[10px] p-0 hover:bg-base-200"
+            className="btn btn-ghost text-primary flex h-auto flex-col flex-1 overflow-hidden text-[10px] 2xl:text-lg p-0 hover:bg-base-200"
             onClick={btn.onClick}
           >
             <btn.icon className="w-10 h-10" />
