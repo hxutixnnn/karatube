@@ -157,7 +157,7 @@ function HomePage() {
         <div className="flex flex-row gap-2 p-1 justify-between items-center bg-primary">
           <div className="form-control flex-1">
             <div className="input-group">
-              <span className="px-2 md:px-4">
+              <span className="px-2 sm:px-4">
                 <MagnifyingGlassIcon className="w-6 h-6" />
               </span>
               <DebouncedInput
@@ -186,7 +186,7 @@ function HomePage() {
           </div>
           <label
             htmlFor="modal-playlist"
-            className="btn btn-ghost text-primary-content flex-col gap-1 w-20 p-0 md:hidden"
+            className="btn btn-ghost text-primary-content flex-col gap-1 w-20 p-0 sm:hidden"
           >
             <div className="relative">
               <ListBulletIcon className="h-6 w-6" />
@@ -206,7 +206,7 @@ function HomePage() {
           </div>
         )}
         <div
-          className={`relative grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 w-full overflow-y-auto max-h-full p-2 ${scrollbarCls}`}
+          className={`relative grid grid-cols-2 xl:grid-cols-3 gap-2 w-full overflow-y-auto max-h-full p-2 ${scrollbarCls}`}
         >
           {/* Video Row Item */}
           {isLoading && (
@@ -261,7 +261,7 @@ function HomePage() {
       <input type="checkbox" id="modal-playlist" className="modal-toggle" />
       <label
         htmlFor="modal-playlist"
-        className="modal modal-bottom md:modal-middle cursor-pointer"
+        className="modal modal-bottom sm:modal-middle cursor-pointer"
       >
         <label
           className="flex flex-col modal-box max-h-[50%] overflow-hidden bg-base-300 p-2"
@@ -275,9 +275,9 @@ function HomePage() {
       <input type="checkbox" id="modal-video" className="modal-toggle" />
       <label
         htmlFor="modal-video"
-        className="modal modal-bottom md:modal-middle cursor-pointer"
+        className="modal modal-bottom sm:modal-middle cursor-pointer"
       >
-        <label className="modal-box relative px-2 py-4 pb-12 md:p-4" htmlFor="">
+        <label className="modal-box relative px-2 py-4 pb-12 sm:p-4" htmlFor="">
           <div className="card gap-2">
             <h2 className="card-title text-sm 2xl:text-2xl">
               {selectedVideo?.title}
@@ -319,20 +319,20 @@ function HomePage() {
   return (
     <div className="text-sm 2xl:text-xl w-full max-h-screen overflow-hidden">
       <main className="bg-base-300 h-full">
-        <div className="relative flex flex-col md:flex-row h-screen overflow-hidden">
+        <div className="relative flex flex-col sm:flex-row h-screen overflow-hidden">
           {/* START Recommend Videos List */}
-          <div className="order-2 md:order-1 flex flex-col h-full w-full overflow-hidden">
+          <div className="order-2 sm:order-1 flex flex-col h-full w-full overflow-hidden">
             {SearchScreen}
           </div>
           {/* END Recommend Videos List */}
           {/* Video Player */}
-          <div className="relative order-1 md:order-2 w-full flex flex-row md:flex-col flex-grow flex-shrink-0 md:max-w-[40vw] md:min-w-[400px] md:h-screen overflow-hidden">
+          <div className="relative order-1 sm:order-2 w-full flex flex-row sm:flex-col flex-grow flex-shrink-0 sm:max-w-[50vw] lg:max-w-[50vw] 2xl:max-w-[50vw] sm:min-w-[400px] sm:h-screen overflow-hidden">
             <YoutubePlayer
               videoId={curVideoId}
               nextSong={() => setCurVideoId("")}
-              className="flex flex-col flex-1 md:flex-grow-0"
+              className="flex flex-col flex-1 sm:flex-grow-0"
             />
-            <div className="max-h-full w-full p-2 overflow-hidden hidden md:flex flex-col">
+            <div className="max-h-full w-full p-2 overflow-hidden hidden sm:flex flex-col">
               {PlaylistScreen}
             </div>
           </div>
