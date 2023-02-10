@@ -4,19 +4,14 @@ import { Fragment, useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { useLocalStorage } from "react-use";
 import DebouncedInput from "../components/DebouncedInput";
+import { VideoHorizontalCard } from "../components/VideoHorizontalCard";
 import YoutubePlayer from "../components/YoutubePlayer";
+import { usePlaylist } from "../hooks/karaoke";
 import { RecommendedVideo, SearchResult } from "../types/invidious";
 import { getSearchResult, getSkeletonItems, getVideoInfo } from "../utils/api";
 
-type PlaylistItem = (SearchResult | RecommendedVideo) & {
-  key: string;
-};
-
 function HomePage() {
-  const [playlist, setPlaylist] = useLocalStorage<PlaylistItem[]>(
-    "playlist",
-    []
-  );
+  const [playlist, setPlaylist] = usePlaylist([]);
   const [curVideoId, setCurVideoId] = useLocalStorage("videoId", ""); // TODO: make a video instruction and put it as a initial here
   const [selectedVideo, setSelectedVideo] = useState<
     SearchResult | RecommendedVideo
@@ -153,8 +148,9 @@ function HomePage() {
   const SearchScreen = (
     <>
       {/* START Search Bar */}
-      <div className="drawer-content flex flex-col h-full overflow-hidden">
+      <div className="flex flex-col h-full overflow-hidden">
         <div className="flex flex-row gap-2 p-1 justify-between items-center bg-primary">
+          {/* START Search Input */}
           <div className="form-control flex-1">
             <div className="input-group">
               <span className="px-2 sm:px-4">
@@ -171,6 +167,8 @@ function HomePage() {
               />
             </div>
           </div>
+          {/* END Search Input */}
+          {/* START Karaoke Switch */}
           <div className="form-control">
             <label className="cursor-pointer label flex-col lg:flex-row gap-1">
               <input
@@ -184,6 +182,7 @@ function HomePage() {
               </span>
             </label>
           </div>
+          {/* END Karaoke Switch */}
           <label
             htmlFor="modal-playlist"
             className="btn btn-ghost text-primary-content flex-col gap-1 w-20 p-0 sm:hidden"
@@ -338,62 +337,6 @@ function HomePage() {
           </div>
         </div>
       </main>
-    </div>
-  );
-}
-
-interface VideoHorizontalCardProps {
-  video: PlaylistItem;
-  onSelect?: (video: PlaylistItem) => void;
-  onDelete?: (video: PlaylistItem) => void;
-}
-
-function VideoHorizontalCard({
-  video,
-  onSelect = () => {},
-  onDelete = () => {},
-}: VideoHorizontalCardProps) {
-  return (
-    <div
-      tabIndex={0}
-      className="collapse bg-white shadow hover:shadow-md rounded cursor-pointer"
-    >
-      <div className="collapse-title p-0 flex-1 grid grid-cols-3 overflow-hidden">
-        <figure className="relative w-full aspect-video">
-          <Image
-            unoptimized
-            src={`https://yt.funami.tech/vi/${video?.videoId}/mqdefault.jpg`}
-            priority
-            alt={video?.title}
-            layout="fill"
-            className="bg-gray-400 col-span-1"
-          />
-        </figure>
-
-        <div className="col-span-2 flex flex-col p-[1vw] overflow-hidden gap-2">
-          <h2 className="font-semibold text-sm 2xl:text-2xl line-clamp-2">
-            {video?.title}
-          </h2>
-          <p className="text-xs 2xl:text-xl truncate">{video?.author}</p>
-        </div>
-      </div>
-
-      <div className="collapse-content p-0">
-        <div className="flex flex-row gap-1 px-2 pt-4 pb-0 border-t">
-          <div
-            className="btn  btn-primary flex-1 2xl:text-2xl"
-            onClick={() => onSelect(video)}
-          >
-            Ưu tiên
-          </div>
-          <div
-            className="btn  btn-ghost text-error flex-1 2xl:text-2xl"
-            onClick={() => onDelete(video)}
-          >
-            Xóa khỏi danh sách
-          </div>
-        </div>
-      </div>
     </div>
   );
 }
