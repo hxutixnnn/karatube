@@ -241,7 +241,7 @@ function HomePage() {
                         />
                       </figure>
                       <div className="card-body p-2">
-                        <h2 className="font-semibold text-sm 2xl:text-2xl line-clamp-2">
+                        <h2 className="font-semibold text-sm 2xl:text-2xl line-clamp-2 h-[2.7em]">
                           {rcm?.title}
                         </h2>
                         <p className="text-xs 2xl:text-xl truncate">
