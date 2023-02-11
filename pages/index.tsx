@@ -1,4 +1,9 @@
-import { ListBulletIcon, MagnifyingGlassIcon } from "@heroicons/react/20/solid";
+import {
+  ListBulletIcon,
+  MagnifyingGlassIcon,
+  MusicalNoteIcon,
+  RectangleStackIcon,
+} from "@heroicons/react/20/solid";
 import Image from "next/image";
 import { Fragment, useEffect, useState } from "react";
 import { useQuery } from "react-query";
@@ -43,6 +48,7 @@ function HomePage() {
 
   const [searchTerm, setSearchTerm] = useLocalStorage("searchTerm", "actdm");
   const [isKaraoke, setIsKaraoke] = useState(true);
+  const [activeIndex, setActiveIndex] = useState(0);
 
   const titleIncludesKaraoke = ({ title }) => {
     const lcTitle = title.toLowerCase();
@@ -86,6 +92,8 @@ function HomePage() {
   const isEmptySearch = searchTerm && !isLoading && !searchResults?.length;
   const isEmptyRecommend =
     !searchTerm && !isLoading && !recommendedVideos?.length;
+
+  const renderList = searchTerm ? searchResults : recommendedVideos;
 
   const scrollbarCls =
     "scrollbar scrollbar-w-1 scrollbar-thumb-gray-400 hover:scrollbar-thumb-gray-500 scrollbar-track-base-300 scrollbar-thumb-rounded";
@@ -207,7 +215,7 @@ function HomePage() {
         <div
           className={`relative grid grid-cols-2 xl:grid-cols-3 gap-2 w-full overflow-y-auto max-h-full p-2 ${scrollbarCls}`}
         >
-          {/* Video Row Item */}
+          {/* START Video Row Item */}
           {isLoading && (
             <>
               <div className="absolute inset-0 bg-gradient-to-t from-base-300 z-50" />
@@ -219,101 +227,158 @@ function HomePage() {
               ))}
             </>
           )}
-          {(searchTerm ? searchResults : recommendedVideos)?.map(
-            (rcm: SearchResult | RecommendedVideo) => {
-              return (
-                <Fragment key={rcm?.videoId}>
-                  {/* The button to open modal */}
-                  <label
-                    htmlFor="modal-video"
-                    onClick={() => setSelectedVideo(rcm)}
-                  >
-                    <div className="card overflow-hidden bg-white shadow hover:shadow-md cursor-pointer flex-auto">
-                      <figure className="relative w-full aspect-video">
-                        <Image
-                          unoptimized
-                          src={`https://yt.funami.tech/vi/${rcm?.videoId}/mqdefault.jpg`}
-                          priority
-                          alt={rcm?.title}
-                          layout="fill"
-                          className="bg-gray-400"
-                        />
-                      </figure>
-                      <div className="card-body p-2">
-                        <h2 className="font-semibold text-sm 2xl:text-2xl line-clamp-2 h-[2.7em]">
-                          {rcm?.title}
-                        </h2>
-                        <p className="text-xs 2xl:text-xl truncate">
-                          {rcm?.author}
-                        </p>
-                      </div>
+          {renderList?.map((rcm: SearchResult | RecommendedVideo) => {
+            return (
+              <Fragment key={rcm?.videoId}>
+                {/* The button to open modal */}
+                <label
+                  htmlFor="modal-video"
+                  onClick={() => setSelectedVideo(rcm)}
+                >
+                  <div className="card overflow-hidden bg-white shadow hover:shadow-md cursor-pointer flex-auto">
+                    <figure className="relative w-full aspect-video">
+                      <Image
+                        unoptimized
+                        src={`https://yt.funami.tech/vi/${rcm?.videoId}/mqdefault.jpg`}
+                        priority
+                        alt={rcm?.title}
+                        layout="fill"
+                        className="bg-gray-400"
+                      />
+                    </figure>
+                    <div className="card-body p-2">
+                      <h2 className="font-semibold text-sm 2xl:text-2xl line-clamp-2 h-[2.7em]">
+                        {rcm?.title}
+                      </h2>
+                      <p className="text-xs 2xl:text-xl truncate">
+                        {rcm?.author}
+                      </p>
                     </div>
-                  </label>
-                </Fragment>
-              );
-            }
-          )}
+                  </div>
+                </label>
+              </Fragment>
+            );
+          })}
           {/* END Video Row Item */}
         </div>
-      </div>
-      {/* Put this part before </body> tag */}
-      <input type="checkbox" id="modal-playlist" className="modal-toggle" />
-      <label
-        htmlFor="modal-playlist"
-        className="modal modal-bottom sm:modal-middle cursor-pointer"
-      >
+        {/* Put this part before </body> tag */}
+        <input type="checkbox" id="modal-playlist" className="modal-toggle" />
         <label
-          className="flex flex-col modal-box max-h-[50%] overflow-hidden bg-base-300 p-2"
-          htmlFor=""
+          htmlFor="modal-playlist"
+          className="modal modal-bottom sm:modal-middle cursor-pointer"
         >
-          <div className="relative h-full overflow-y-auto flex flex-col">
-            {PlaylistScreen}
-          </div>
+          <label
+            className="flex flex-col modal-box max-h-[50%] overflow-hidden bg-base-300 p-2"
+            htmlFor=""
+          >
+            <div className="relative h-full overflow-y-auto flex flex-col">
+              {PlaylistScreen}
+            </div>
+          </label>
         </label>
-      </label>
-      <input type="checkbox" id="modal-video" className="modal-toggle" />
-      <label
-        htmlFor="modal-video"
-        className="modal modal-bottom sm:modal-middle cursor-pointer"
-      >
-        <label className="modal-box relative px-2 py-4 pb-12 sm:p-4" htmlFor="">
-          <div className="card gap-2">
-            <h2 className="card-title text-sm 2xl:text-2xl">
-              {selectedVideo?.title}
-            </h2>
-            <figure className="relative w-full aspect-video">
-              <Image
-                unoptimized
-                src={`https://yt.funami.tech/vi/${selectedVideo?.videoId}/mqdefault.jpg`}
-                priority
-                alt={selectedVideo?.title}
-                layout="fill"
-                className="bg-gray-400"
-              />
-            </figure>
-            <div className="card-body p-0">
-              <div className="card-actions">
-                <label
-                  htmlFor="modal-video"
-                  className="btn btn-primary flex-1 2xl:text-2xl"
-                  onClick={() => addVideoToPlaylist(selectedVideo)}
-                >
-                  Chọn
-                </label>
-                <label
-                  htmlFor="modal-video"
-                  className="btn btn-primary flex-1 2xl:text-2xl"
-                  onClick={() => priorityVideo(selectedVideo)}
-                >
-                  Ưu tiên
-                </label>
+        <input type="checkbox" id="modal-video" className="modal-toggle" />
+        <label
+          htmlFor="modal-video"
+          className="modal modal-bottom sm:modal-middle cursor-pointer"
+        >
+          <label
+            className="modal-box relative px-2 py-4 pb-12 sm:p-4"
+            htmlFor=""
+          >
+            <div className="card gap-2">
+              <h2 className="card-title text-sm 2xl:text-2xl">
+                {selectedVideo?.title}
+              </h2>
+              <figure className="relative w-full aspect-video">
+                <Image
+                  unoptimized
+                  src={`https://yt.funami.tech/vi/${selectedVideo?.videoId}/mqdefault.jpg`}
+                  priority
+                  alt={selectedVideo?.title}
+                  layout="fill"
+                  className="bg-gray-400"
+                />
+              </figure>
+              <div className="card-body p-0">
+                <div className="card-actions">
+                  <label
+                    htmlFor="modal-video"
+                    className="btn btn-primary flex-1 2xl:text-2xl"
+                    onClick={() => addVideoToPlaylist(selectedVideo)}
+                  >
+                    Chọn
+                  </label>
+                  <label
+                    htmlFor="modal-video"
+                    className="btn btn-primary flex-1 2xl:text-2xl"
+                    onClick={() => priorityVideo(selectedVideo)}
+                  >
+                    Ưu tiên
+                  </label>
+                </div>
               </div>
             </div>
-          </div>
+          </label>
         </label>
-      </label>
+      </div>
     </>
   );
+
+  const ListSingerScreen = (
+    <>
+      <h1 className="text-xl font-bold p-2 text-primary">Ca sĩ</h1>
+      <div
+        className={`relative grid grid-cols-2 xl:grid-cols-3 gap-2 w-full overflow-y-auto max-h-full p-2 ${scrollbarCls}`}
+      >
+        {/* START Video Row Item */}
+        {isLoading && (
+          <>
+            <div className="absolute inset-0 bg-gradient-to-t from-base-300 z-50" />
+            {getSkeletonItems(16).map((s) => (
+              <div
+                key={s}
+                className="card bg-gray-300 animate-pulse w-full aspect-w-4 aspect-h-3"
+              />
+            ))}
+          </>
+        )}
+        {renderList?.map((rcm: SearchResult | RecommendedVideo) => {
+          return (
+            <Fragment key={rcm?.videoId}>
+              {/* The button to open modal */}
+              <label
+                htmlFor="modal-video"
+                onClick={() => setSelectedVideo(rcm)}
+              >
+                <div className="card overflow-hidden bg-white shadow hover:shadow-md cursor-pointer flex-auto">
+                  <figure className="relative w-full aspect-video">
+                    <Image
+                      unoptimized
+                      src={`https://yt.funami.tech/vi/${rcm?.videoId}/mqdefault.jpg`}
+                      priority
+                      alt={rcm?.title}
+                      layout="fill"
+                      className="bg-gray-400"
+                    />
+                  </figure>
+                  <div className="card-body p-2">
+                    <h2 className="font-semibold text-sm 2xl:text-2xl line-clamp-2 h-[2.7em]">
+                      {rcm?.title}
+                    </h2>
+                    <p className="text-xs 2xl:text-xl truncate">
+                      {rcm?.author}
+                    </p>
+                  </div>
+                </div>
+              </label>
+            </Fragment>
+          );
+        })}
+        {/* END Video Row Item */}
+      </div>
+    </>
+  );
+  const ListCategoryScreen = null;
 
   return (
     <div className="text-sm 2xl:text-xl w-full max-h-screen overflow-hidden">
@@ -321,7 +386,12 @@ function HomePage() {
         <div className="relative flex flex-col sm:flex-row h-screen overflow-hidden">
           {/* START Recommend Videos List */}
           <div className="order-2 sm:order-1 flex flex-col h-full w-full overflow-hidden">
-            {SearchScreen}
+            {[SearchScreen, ListSingerScreen, ListCategoryScreen][activeIndex]}
+
+            <BottomNavigation
+              activeIndex={activeIndex}
+              setActiveIndex={setActiveIndex}
+            />
           </div>
           {/* END Recommend Videos List */}
           {/* Video Player */}
@@ -337,6 +407,34 @@ function HomePage() {
           </div>
         </div>
       </main>
+    </div>
+  );
+}
+
+function BottomNavigation({ activeIndex, setActiveIndex }) {
+  return (
+    <div className="btm-nav static md:h-24">
+      <button
+        className={`text-primary ${activeIndex === 0 ? "active" : ""}`}
+        onClick={() => setActiveIndex(0)}
+      >
+        <MagnifyingGlassIcon className="w-6 h-6" />
+        <span className="btm-nav-label">Tìm kiếm</span>
+      </button>
+      <button
+        className={`text-primary ${activeIndex === 1 ? "active" : ""}`}
+        onClick={() => setActiveIndex(1)}
+      >
+        <MusicalNoteIcon className="w-6 h-6" />
+        <span className="btm-nav-label">Ca sĩ</span>
+      </button>
+      <button
+        className={`text-primary ${activeIndex === 2 ? "active" : ""}`}
+        onClick={() => setActiveIndex(2)}
+      >
+        <RectangleStackIcon className="w-6 h-6" />
+        <span className="btm-nav-label">Thể loại</span>
+      </button>
     </div>
   );
 }
