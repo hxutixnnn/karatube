@@ -9,7 +9,7 @@ import {
 import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useFullscreen, usePromise, useToggle } from "react-use";
-import YouTube from "react-youtube";
+import YouTube, { YouTubePlayer } from "react-youtube";
 
 function YoutubePlayer({ videoId, nextSong, className = "", extra = null }) {
   const playerRef = useRef<YouTube>();
@@ -23,21 +23,19 @@ function YoutubePlayer({ videoId, nextSong, className = "", extra = null }) {
   const [isMuted, setIsMuted] = useState(false);
   const mounted = usePromise();
 
+  async function updatePlayerState(player: YouTubePlayer) {
+    if (!player) return;
+    const [muteState, playerState] = await mounted(
+      Promise.allSettled([player.isMuted(), player.getPlayerState()])
+    );
+    // These lines will not execute if this component gets unmounted.
+    if (muteState.status === "fulfilled") setIsMuted(muteState.value);
+    if (playerState.status === "fulfilled") setPlayerState(playerState.value);
+  }
+
   useEffect(() => {
-    async function updatePlayerState() {
-      console.log("updatePlayerState");
-
-      const player = playerRef.current?.getInternalPlayer();
-      if (!player) return;
-      const [muteState, playerState] = await mounted(
-        Promise.allSettled([player.isMuted(), player.getPlayerState()])
-      );
-      // These lines will not execute if this component gets unmounted.
-      if (muteState.status === "fulfilled") setIsMuted(muteState.value);
-      if (playerState.status === "fulfilled") setPlayerState(playerState.value);
-    }
-
-    updatePlayerState();
+    const player = playerRef.current?.getInternalPlayer();
+    updatePlayerState(player);
   }, [videoId]);
 
   const playPauseBtn = useMemo(
@@ -164,9 +162,7 @@ function YoutubePlayer({ videoId, nextSong, className = "", extra = null }) {
                 playsinline: 1,
               },
             }}
-            onStateChange={async (ev) =>
-              setPlayerState(await ev.target.getPlayerState())
-            }
+            onStateChange={(ev) => updatePlayerState(ev.target)}
             onEnd={nextSong}
           />
         )}
