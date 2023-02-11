@@ -28,7 +28,7 @@ function HomePage() {
   }, [playlist, curVideoId]);
 
   function addVideoToPlaylist(video: SearchResult | RecommendedVideo) {
-    setPlaylist(playlist.concat([{ key: crypto.randomUUID(), ...video }]));
+    setPlaylist(playlist.concat([{ key: new Date().getTime(), ...video }]));
   }
 
   function priorityVideo(
@@ -38,7 +38,7 @@ function HomePage() {
     if (!curVideoId) setCurVideoId(video.videoId);
     // move `videoId` to the top of the playlist
     const newPlaylist = playlist.filter((_, index) => index !== videoIndex);
-    setPlaylist([{ key: crypto.randomUUID(), ...video }, ...newPlaylist]);
+    setPlaylist([{ key: new Date().getTime(), ...video }, ...newPlaylist]);
   }
 
   const [searchTerm, setSearchTerm] = useLocalStorage("searchTerm", "actdm");
