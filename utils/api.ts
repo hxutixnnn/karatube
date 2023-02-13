@@ -1,5 +1,5 @@
 import axios from "axios";
-import { GetArtists } from "../types";
+import { GetArtists, GetTopics } from "../types";
 import { SearchResult, VideoResponse } from "../types/invidious";
 
 const invidious = axios.create({
@@ -35,5 +35,10 @@ export const getSkeletonItems = (length: number) =>
 
 export const getArtists = async (gender: number = 1) => {
   const res = await axios.get<GetArtists>("/api/artists/" + gender);
+  return res.data;
+};
+
+export const getTopics = async () => {
+  const res = await axios.get<GetTopics>("/api/topics");
   return res.data;
 };
