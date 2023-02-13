@@ -5,3 +5,6 @@
 .aspect-video {
   @apply aspect-w-16 aspect-h-9;
 }
+.aspect-square {
+  @apply aspect-w-1 aspect-h-1;
+}

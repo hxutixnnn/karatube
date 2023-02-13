@@ -35,7 +35,7 @@ function YoutubePlayer({ videoId, nextSong, className = "", extra = null }) {
 
   useEffect(() => {
     const player = playerRef.current?.getInternalPlayer();
-    updatePlayerState(player);
+    if (player) updatePlayerState(player);
   }, [videoId]);
 
   const playPauseBtn = useMemo(
@@ -47,6 +47,7 @@ function YoutubePlayer({ videoId, nextSong, className = "", extra = null }) {
             onClick: async () => {
               try {
                 const player = playerRef.current?.getInternalPlayer();
+                if (!player) return;
                 setPlayerState(await player.getPlayerState());
                 await player.pauseVideo();
               } catch (error) {
@@ -60,8 +61,9 @@ function YoutubePlayer({ videoId, nextSong, className = "", extra = null }) {
             onClick: async () => {
               try {
                 const player = playerRef.current?.getInternalPlayer();
-                setPlayerState(await player.getPlayerState());
-                await player.playVideo();
+                if (!player) return;
+                setPlayerState(await player?.getPlayerState());
+                await player?.playVideo();
               } catch (error) {
                 console.log(error);
               }
@@ -79,6 +81,7 @@ function YoutubePlayer({ videoId, nextSong, className = "", extra = null }) {
             onClick: async () => {
               try {
                 const player = playerRef.current?.getInternalPlayer();
+                if (!player) return;
                 await player.mute();
                 setIsMuted(true);
               } catch (error) {
@@ -92,6 +95,7 @@ function YoutubePlayer({ videoId, nextSong, className = "", extra = null }) {
             onClick: async () => {
               try {
                 const player = playerRef.current?.getInternalPlayer();
+                if (!player) return;
                 await player.unMute();
                 setIsMuted(false);
               } catch (error) {
@@ -116,6 +120,7 @@ function YoutubePlayer({ videoId, nextSong, className = "", extra = null }) {
         onClick: async () => {
           try {
             const player = playerRef.current?.getInternalPlayer();
+            if (!player) return;
             await player.seekTo(0, true);
           } catch (error) {
             console.log(error);

@@ -6,7 +6,13 @@ import Script from "next/script";
 import { Analytics } from "@vercel/analytics/react";
 
 // Create a client
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: Infinity,
+    },
+  },
+});
 
 function App({ Component, pageProps }) {
   return (
