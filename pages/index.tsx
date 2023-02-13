@@ -395,9 +395,10 @@ function SearchResultGrid({
 }
 
 function ListSingerGrid() {
-  const { data: topartists, isLoading } = useQuery(["getArtists"], getArtists, {
-    select: (res) => res.topartists,
-  });
+  const [gender, setGender] = useState(1);
+  const { data: topartists, isLoading } = useQuery(["getArtists", gender], () =>
+    getArtists(gender)
+  );
   const { value: activeIndex, set: setActiveIndex } = useLocalStorageValue(
     "activeIndex",
     { defaultValue: 0 }
@@ -410,6 +411,26 @@ function ListSingerGrid() {
 
   return (
     <>
+      <div className="tabs tabs-boxed col-span-full justify-center">
+        <div
+          className={`tab ${gender === 1 ? "tab-active" : ""}`}
+          onClick={() => setGender(1)}
+        >
+          Nam
+        </div>
+        <div
+          className={`tab ${gender === 2 ? "tab-active" : ""}`}
+          onClick={() => setGender(2)}
+        >
+          Nữ
+        </div>
+        <div
+          className={`tab ${gender === 3 ? "tab-active" : ""}`}
+          onClick={() => setGender(3)}
+        >
+          Nhóm nhạc
+        </div>
+      </div>
       {isLoading && (
         <>
           <div className="absolute inset-0 bg-gradient-to-t from-base-300 z-50" />
@@ -431,14 +452,20 @@ function ListSingerGrid() {
                 setActiveIndex(0);
               }}
             >
-              <figure className="relative w-full aspect-w-4 aspect-h-3">
+              <figure className="relative w-full aspect-square">
                 <Image
                   unoptimized
-                  src={artist.image.at(-1)["#text"]}
+                  src={artist.imageUrl}
                   priority
                   alt={artist.name}
                   layout="fill"
-                  className="bg-gray-400"
+                  className="animate-pulse bg-gray-400"
+                  onLoad={(ev) =>
+                    ev.currentTarget.classList.remove("animate-pulse")
+                  }
+                  onErrorCapture={(ev) => {
+                    ev.currentTarget.src = "/assets/avatar.jpeg";
+                  }}
                 />
               </figure>
               <div className="card-body p-2">
