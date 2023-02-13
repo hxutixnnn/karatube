@@ -33,7 +33,7 @@ function HomePage() {
   >();
 
   useEffect(() => {
-    if (playlist.length && !curVideoId) {
+    if (playlist?.length && !curVideoId) {
       // playing first video
       const [video, ...newPlaylist] = playlist;
       setCurVideoId(video.videoId);
@@ -43,7 +43,7 @@ function HomePage() {
   }, [playlist, curVideoId]);
 
   function addVideoToPlaylist(video: SearchResult | RecommendedVideo) {
-    setPlaylist(playlist.concat([{ key: new Date().getTime(), ...video }]));
+    setPlaylist(playlist?.concat([{ key: new Date().getTime(), ...video }]));
   }
 
   function priorityVideo(
@@ -52,7 +52,7 @@ function HomePage() {
   ) {
     if (!curVideoId) setCurVideoId(video.videoId);
     // move `videoId` to the top of the playlist
-    const newPlaylist = playlist.filter((_, index) => index !== videoIndex);
+    const newPlaylist = playlist?.filter((_, index) => index !== videoIndex);
     setPlaylist([{ key: new Date().getTime(), ...video }, ...newPlaylist]);
   }
 
@@ -72,15 +72,13 @@ function HomePage() {
   const scrollbarCls =
     "scrollbar scrollbar-w-1 scrollbar-thumb-gray-400 hover:scrollbar-thumb-gray-500 scrollbar-track-base-300 scrollbar-thumb-rounded";
 
-  function handleSearch(q: string) {
-    setSearchTerm(q);
-  }
-
   const PlaylistScreen = (
     <>
       <div className="flex flex-row font-bold">
-        <span className="text-primary">BÀI KẾ TIẾP ({playlist.length})</span>
-        {!playlist.length ? null : (
+        <span className="text-primary">
+          BÀI KẾ TIẾP ({playlist?.length || 0})
+        </span>
+        {!playlist?.length ? null : (
           <div className="dropdown dropdown-end ml-auto">
             <label
               tabIndex={0}
@@ -113,7 +111,7 @@ function HomePage() {
         className={`flex-shrink-0 h-full overflow-y-auto pt-2 pb-12 ${scrollbarCls}`}
       >
         <div className="grid grid-cols-1 gap-2">
-          {playlist.map((video, videoIndex) => (
+          {playlist?.map((video, videoIndex) => (
             <VideoHorizontalCard
               key={video.key}
               video={video}
@@ -128,7 +126,7 @@ function HomePage() {
     </>
   );
 
-  const ListCategoryScreen = null;
+  const ListCategoryScreen = () => <></>;
 
   return (
     <div className="text-sm 2xl:text-xl w-full max-h-screen overflow-hidden">
@@ -179,7 +177,7 @@ function HomePage() {
                   <div className="relative">
                     <ListBulletIcon className="h-6 w-6" />
                     <span className="badge absolute -top-2 -right-2 text-xs p-1">
-                      {playlist.length}
+                      {playlist?.length || 0}
                     </span>
                   </div>
                   <span className="text-[10px] leading-none">Đã chọn</span>
@@ -195,12 +193,11 @@ function HomePage() {
                 {
                   [
                     <SearchResultGrid
+                      key={0}
                       onClick={(video) => setSelectedVideo(video)}
                     />,
-                    <ListSingerGrid
-                    //onClick={(singer) => setSearchTerm(singer.name)}
-                    />,
-                    ListCategoryScreen,
+                    <ListSingerGrid key={1} />,
+                    <ListCategoryScreen key={2} />,
                   ][activeIndex]
                 }
 
