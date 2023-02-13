@@ -138,7 +138,13 @@ function YoutubePlayer({ videoId, nextSong, className = "", extra = null }) {
       >
         {!videoId ? (
           <div className="h-full w-full flex items-center justify-center bg-black">
-            <Image src="/icon-192.png" width={48} height={48} className="" />
+            <Image
+              src="/icon-192.png"
+              width={48}
+              height={48}
+              className=""
+              alt="KaraTube's Logo"
+            />
           </div>
         ) : (
           <YouTube

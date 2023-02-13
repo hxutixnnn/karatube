@@ -257,7 +257,12 @@ function HomePage() {
         </div>
       </div>
       {/* Put this part before </body> tag */}
-      <input type="checkbox" id="modal-playlist" className="modal-toggle" />
+      <input
+        type="checkbox"
+        id="modal-playlist"
+        className="modal-toggle"
+        aria-label="modal-playlist"
+      />
       <label
         htmlFor="modal-playlist"
         className="modal modal-bottom sm:modal-middle cursor-pointer"
@@ -277,39 +282,41 @@ function HomePage() {
         className="modal modal-bottom sm:modal-middle cursor-pointer"
       >
         <label className="modal-box relative px-2 py-4 pb-12 sm:p-4" htmlFor="">
-          <div className="card gap-2">
-            <h2 className="card-title text-sm 2xl:text-2xl">
-              {selectedVideo?.title}
-            </h2>
-            <figure className="relative w-full aspect-video">
-              <Image
-                unoptimized
-                src={`https://yt.funami.tech/vi/${selectedVideo?.videoId}/mqdefault.jpg`}
-                priority
-                alt={selectedVideo?.title}
-                layout="fill"
-                className="bg-gray-400"
-              />
-            </figure>
-            <div className="card-body p-0">
-              <div className="card-actions">
-                <label
-                  htmlFor="modal-video"
-                  className="btn btn-primary flex-1 2xl:text-2xl"
-                  onClick={() => addVideoToPlaylist(selectedVideo)}
-                >
-                  Chọn
-                </label>
-                <label
-                  htmlFor="modal-video"
-                  className="btn btn-primary flex-1 2xl:text-2xl"
-                  onClick={() => priorityVideo(selectedVideo)}
-                >
-                  Ưu tiên
-                </label>
+          {!selectedVideo ? null : (
+            <div className="card gap-2">
+              <h2 className="card-title text-sm 2xl:text-2xl">
+                {selectedVideo.title}
+              </h2>
+              <figure className="relative w-full aspect-video">
+                <Image
+                  unoptimized
+                  src={`https://yt.funami.tech/vi/${selectedVideo.videoId}/mqdefault.jpg`}
+                  priority
+                  alt={selectedVideo.title}
+                  layout="fill"
+                  className="bg-gray-400"
+                />
+              </figure>
+              <div className="card-body p-0">
+                <div className="card-actions">
+                  <label
+                    htmlFor="modal-video"
+                    className="btn btn-primary flex-1 2xl:text-2xl"
+                    onClick={() => addVideoToPlaylist(selectedVideo)}
+                  >
+                    Chọn
+                  </label>
+                  <label
+                    htmlFor="modal-video"
+                    className="btn btn-primary flex-1 2xl:text-2xl"
+                    onClick={() => priorityVideo(selectedVideo)}
+                  >
+                    Ưu tiên
+                  </label>
+                </div>
               </div>
             </div>
-          </div>
+          )}
         </label>
       </label>
     </>
