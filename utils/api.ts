@@ -14,7 +14,9 @@ export const getVideoInfo = async (videoId: string) => {
   if (!videoId) {
     throw new Error("Missing query key!");
   }
-  const res = await axios<VideoResponse>("/api/v1/videos/" + videoId);
+  const res = await axios<VideoResponse>(
+    "/api/v1/videos/" + videoId + "/?fields=recommendedVideos"
+  );
   return res.data;
 };
 export const getSearchResult = async ({
@@ -22,12 +24,13 @@ export const getSearchResult = async ({
   page = 0,
   region = "VN",
   type = "video",
+  fields = "title,videoId,author,videoThumbnails",
 }) => {
   if (!q) {
     throw new Error("Missing params `q`!");
   }
   const res = await axios<SearchResult[]>("/api/v1/search", {
-    params: { q, type, page, region },
+    params: { q, type, page, region, fields },
   });
   return res.data;
 };
