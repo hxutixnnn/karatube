@@ -6,7 +6,7 @@ interface VideoHorizontalCardProps {
   onSelect?: (video: PlaylistItem) => void;
   onDelete?: (video: PlaylistItem) => void;
 }
-export function VideoHorizontalCard({
+export default function VideoHorizontalCard({
   video,
   onSelect = () => {},
   onDelete = () => {},

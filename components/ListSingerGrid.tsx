@@ -4,7 +4,7 @@ import { useQuery } from "react-query";
 import { getSkeletonItems, getArtists } from "../utils/api";
 import { useKaraokeState } from "../hooks/karaoke";
 
-export function ListSingerGrid() {
+export default function ListSingerGrid() {
   const [gender, setGender] = useState(1);
   const { data: topartists, isLoading } = useQuery(["getArtists", gender], () =>
     getArtists(gender)

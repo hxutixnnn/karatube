@@ -5,7 +5,7 @@ import {
 } from "@heroicons/react/20/solid";
 import { useKaraokeState } from "../hooks/karaoke";
 
-export function BottomNavigation() {
+export default function BottomNavigation() {
   const { activeIndex, setActiveIndex } = useKaraokeState();
   return (
     <div className="btm-nav static flex-shrink-0">

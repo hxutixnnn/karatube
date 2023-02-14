@@ -4,7 +4,7 @@ import { useQuery } from "react-query";
 import { getSkeletonItems, getTopics } from "../utils/api";
 import { useKaraokeState } from "../hooks/karaoke";
 
-export function ListTopicsGrid() {
+export default function ListTopicsGrid() {
   const { data, isLoading } = useQuery(["getTopics"], getTopics);
   const { setActiveIndex, setSearchTerm } = useKaraokeState();
   const { topic: topics } = data || {};

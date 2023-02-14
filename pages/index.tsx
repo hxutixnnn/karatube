@@ -1,15 +1,21 @@
 import { ListBulletIcon, MagnifyingGlassIcon } from "@heroicons/react/20/solid";
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { DebounceInput } from "react-debounce-input";
-import { BottomNavigation } from "../components/BottomNavigation";
-import { ListSingerGrid } from "../components/ListSingerGrid";
-import { ListTopicsGrid } from "../components/ListTopicsGrid";
-import { SearchResultGrid } from "../components/SearchResultGrid";
-import { VideoHorizontalCard } from "../components/VideoHorizontalCard";
+import BottomNavigation from "../components/BottomNavigation";
+import SearchResultGrid from "../components/SearchResultGrid";
+import VideoHorizontalCard from "../components/VideoHorizontalCard";
 import YoutubePlayer from "../components/YoutubePlayer";
 import { useKaraokeState } from "../hooks/karaoke";
 import { RecommendedVideo, SearchResult } from "../types/invidious";
+
+const ListSingerGrid = dynamic(() => import("../components/ListSingerGrid"), {
+  loading: () => <div>Loading...</div>,
+});
+const ListTopicsGrid = dynamic(() => import("../components/ListTopicsGrid"), {
+  loading: () => <div>Loading...</div>,
+});
 
 function HomePage() {
   const {

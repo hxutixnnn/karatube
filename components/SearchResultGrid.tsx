@@ -5,7 +5,7 @@ import { RecommendedVideo, SearchResult } from "../types/invidious";
 import { getSearchResult, getSkeletonItems, getVideoInfo } from "../utils/api";
 import { useKaraokeState } from "../hooks/karaoke";
 
-export function SearchResultGrid({
+export default function SearchResultGrid({
   onClick = () => {},
 }: {
   onClick?: (video: SearchResult | RecommendedVideo) => void;
