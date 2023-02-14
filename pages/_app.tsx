@@ -6,7 +6,13 @@ import Script from "next/script";
 import { Analytics } from "@vercel/analytics/react";
 
 // Create a client
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: Infinity,
+    },
+  },
+});
 
 function App({ Component, pageProps }) {
   return (
@@ -53,14 +59,15 @@ function App({ Component, pageProps }) {
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#ef4444" />
+        <meta name="robots" content="all" />
       </Head>
       {process.env.NODE_ENV !== "production" ? null : (
         <>
           <Script
             src="https://www.googletagmanager.com/gtag/js?id=G-DTYZ1GLQQC"
-            strategy="afterInteractive"
+            strategy="worker"
           />
-          <Script id="google-analytics" strategy="afterInteractive">
+          <Script id="google-analytics" strategy="worker">
             {`
           window.dataLayer = window.dataLayer || [];
           function gtag(){window.dataLayer.push(arguments);}
