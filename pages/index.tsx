@@ -7,7 +7,6 @@ import {
 import Image from "next/image";
 import { Fragment, useEffect, useState } from "react";
 import { useQuery } from "react-query";
-import { useLocalStorageValue } from "@react-hookz/web";
 import { DebounceInput } from "react-debounce-input";
 import { VideoHorizontalCard } from "../components/VideoHorizontalCard";
 import YoutubePlayer from "../components/YoutubePlayer";
@@ -19,16 +18,22 @@ import {
   getArtists,
   getTopics,
 } from "../utils/api";
+import { useKaraokeState } from "../hooks/karaoke";
 
 function HomePage() {
-  const { value: playlist, set: setPlaylist } = useLocalStorageValue(
-    "playlist",
-    { defaultValue: [] }
-  );
-  const { value: curVideoId, set: setCurVideoId } = useLocalStorageValue(
-    "videoId",
-    { defaultValue: "" }
-  ); // TODO: make a video instruction and put it as a initial here
+  const {
+    playlist,
+    curVideoId,
+    searchTerm,
+    isKaraoke,
+    activeIndex,
+    setPlaylist,
+    setCurVideoId,
+    setSearchTerm,
+    setIsKaraoke,
+    setActiveIndex,
+  } = useKaraokeState();
+
   const [selectedVideo, setSelectedVideo] = useState<
     SearchResult | RecommendedVideo
   >();
@@ -56,19 +61,6 @@ function HomePage() {
     const newPlaylist = playlist?.filter((_, index) => index !== videoIndex);
     setPlaylist([{ key: new Date().getTime(), ...video }, ...newPlaylist]);
   }
-
-  const { value: searchTerm, set: setSearchTerm } = useLocalStorageValue(
-    "searchTerm",
-    { defaultValue: "" }
-  );
-  const { value: isKaraoke, set: setIsKaraoke } = useLocalStorageValue(
-    "isKaraoke",
-    { defaultValue: true }
-  );
-  const { value: activeIndex, set: setActiveIndex } = useLocalStorageValue(
-    "activeIndex",
-    { defaultValue: 0 }
-  );
 
   useEffect(() => {
     if (searchTerm) setActiveIndex(0);
@@ -300,18 +292,7 @@ function SearchResultGrid({
 }: {
   onClick?: (video: SearchResult | RecommendedVideo) => void;
 }) {
-  const { value: searchTerm, set: setSearchTerm } = useLocalStorageValue(
-    "searchTerm",
-    { defaultValue: "" }
-  );
-  const { value: curVideoId, set: setCurVideoId } = useLocalStorageValue(
-    "videoId",
-    { defaultValue: "" }
-  ); // TODO: make a video instruction and put it as a initial here
-  const { value: isKaraoke, set: setIsKaraoke } = useLocalStorageValue(
-    "isKaraoke",
-    { defaultValue: true }
-  );
+  const { searchTerm, curVideoId, isKaraoke } = useKaraokeState();
   const prefix = isKaraoke ? '"karaoke" ' : "";
 
   const titleIncludesKaraoke = ({ title }) => {
@@ -402,14 +383,7 @@ function ListSingerGrid() {
   const { data: topartists, isLoading } = useQuery(["getArtists", gender], () =>
     getArtists(gender)
   );
-  const { value: activeIndex, set: setActiveIndex } = useLocalStorageValue(
-    "activeIndex",
-    { defaultValue: 0 }
-  );
-  const { value: searchTerm, set: setSearchTerm } = useLocalStorageValue(
-    "searchTerm",
-    { defaultValue: "" }
-  );
+  const { setSearchTerm } = useKaraokeState();
   const { artist } = topartists || {};
 
   return (
@@ -484,14 +458,7 @@ function ListSingerGrid() {
 }
 function ListTopicsGrid() {
   const { data, isLoading } = useQuery(["getTopics"], getTopics);
-  const { value: activeIndex, set: setActiveIndex } = useLocalStorageValue(
-    "activeIndex",
-    { defaultValue: 0 }
-  );
-  const { value: searchTerm, set: setSearchTerm } = useLocalStorageValue(
-    "searchTerm",
-    { defaultValue: "" }
-  );
+  const { setActiveIndex, setSearchTerm } = useKaraokeState();
   const { topic: topics } = data || {};
 
   return (
@@ -547,10 +514,7 @@ function ListTopicsGrid() {
 }
 
 function BottomNavigation() {
-  const { value: activeIndex, set: setActiveIndex } = useLocalStorageValue(
-    "activeIndex",
-    { defaultValue: 0 }
-  );
+  const { activeIndex, setActiveIndex } = useKaraokeState();
   return (
     <div className="btm-nav static flex-shrink-0">
       <button
