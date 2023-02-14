@@ -70,6 +70,10 @@ function HomePage() {
     { defaultValue: 0 }
   );
 
+  useEffect(() => {
+    if (searchTerm) setActiveIndex(0);
+  }, [searchTerm]);
+
   const scrollbarCls =
     "scrollbar scrollbar-w-1 scrollbar-thumb-gray-400 hover:scrollbar-thumb-gray-500 scrollbar-track-base-300 scrollbar-thumb-rounded";
 
@@ -410,7 +414,7 @@ function ListSingerGrid() {
 
   return (
     <>
-      <div className="tabs tabs-boxed col-span-full justify-center">
+      <div className="tabs tabs-boxed col-span-full justify-center bg-transparent">
         <div
           className={`tab ${gender === 1 ? "tab-active" : ""}`}
           onClick={() => setGender(1)}
@@ -448,7 +452,6 @@ function ListSingerGrid() {
               className="card overflow-hidden bg-white shadow hover:shadow-md cursor-pointer flex-auto"
               onClick={() => {
                 setSearchTerm(artist.name);
-                setActiveIndex(0);
               }}
             >
               <figure className="relative w-full aspect-square">
