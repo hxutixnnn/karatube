@@ -1,33 +1,36 @@
-import {
-  ListBulletIcon,
-  MagnifyingGlassIcon,
-  MusicalNoteIcon,
-  RectangleStackIcon,
-} from "@heroicons/react/20/solid";
+import { ListBulletIcon, MagnifyingGlassIcon } from "@heroicons/react/20/solid";
+import dynamic from "next/dynamic";
 import Image from "next/image";
-import { Fragment, useEffect, useState } from "react";
-import { useQuery } from "react-query";
-import { useLocalStorageValue } from "@react-hookz/web";
+import { useEffect, useState } from "react";
 import { DebounceInput } from "react-debounce-input";
-import { VideoHorizontalCard } from "../components/VideoHorizontalCard";
+import BottomNavigation from "../components/BottomNavigation";
+import SearchResultGrid from "../components/SearchResultGrid";
+import VideoHorizontalCard from "../components/VideoHorizontalCard";
 import YoutubePlayer from "../components/YoutubePlayer";
+import { useKaraokeState } from "../hooks/karaoke";
 import { RecommendedVideo, SearchResult } from "../types/invidious";
-import {
-  getSearchResult,
-  getSkeletonItems,
-  getVideoInfo,
-  getArtists,
-} from "../utils/api";
+
+const ListSingerGrid = dynamic(() => import("../components/ListSingerGrid"), {
+  loading: () => <div>Loading...</div>,
+});
+const ListTopicsGrid = dynamic(() => import("../components/ListTopicsGrid"), {
+  loading: () => <div>Loading...</div>,
+});
 
 function HomePage() {
-  const { value: playlist, set: setPlaylist } = useLocalStorageValue(
-    "playlist",
-    { defaultValue: [] }
-  );
-  const { value: curVideoId, set: setCurVideoId } = useLocalStorageValue(
-    "videoId",
-    { defaultValue: "" }
-  ); // TODO: make a video instruction and put it as a initial here
+  const {
+    playlist,
+    curVideoId,
+    searchTerm,
+    isKaraoke,
+    activeIndex,
+    setPlaylist,
+    setCurVideoId,
+    setSearchTerm,
+    setIsKaraoke,
+    setActiveIndex,
+  } = useKaraokeState();
+
   const [selectedVideo, setSelectedVideo] = useState<
     SearchResult | RecommendedVideo
   >();
@@ -56,18 +59,9 @@ function HomePage() {
     setPlaylist([{ key: new Date().getTime(), ...video }, ...newPlaylist]);
   }
 
-  const { value: searchTerm, set: setSearchTerm } = useLocalStorageValue(
-    "searchTerm",
-    { defaultValue: "" }
-  );
-  const { value: isKaraoke, set: setIsKaraoke } = useLocalStorageValue(
-    "isKaraoke",
-    { defaultValue: true }
-  );
-  const { value: activeIndex, set: setActiveIndex } = useLocalStorageValue(
-    "activeIndex",
-    { defaultValue: 0 }
-  );
+  useEffect(() => {
+    if (searchTerm) setActiveIndex(0);
+  }, [searchTerm]);
 
   const scrollbarCls =
     "scrollbar scrollbar-w-1 scrollbar-thumb-gray-400 hover:scrollbar-thumb-gray-500 scrollbar-track-base-300 scrollbar-thumb-rounded";
@@ -125,8 +119,6 @@ function HomePage() {
       </div>
     </>
   );
-
-  const ListCategoryScreen = () => <></>;
 
   return (
     <div className="text-sm 2xl:text-xl w-full max-h-screen overflow-hidden">
@@ -197,7 +189,7 @@ function HomePage() {
                       onClick={(video) => setSelectedVideo(video)}
                     />,
                     <ListSingerGrid key={1} />,
-                    <ListCategoryScreen key={2} />,
+                    <ListTopicsGrid key={2} />,
                   ][activeIndex]
                 }
 
@@ -288,200 +280,6 @@ function HomePage() {
           </div>
         </div>
       </main>
-    </div>
-  );
-}
-
-function SearchResultGrid({
-  onClick = () => {},
-}: {
-  onClick?: (video: SearchResult | RecommendedVideo) => void;
-}) {
-  const { value: searchTerm, set: setSearchTerm } = useLocalStorageValue(
-    "searchTerm",
-    { defaultValue: "" }
-  );
-  const { value: curVideoId, set: setCurVideoId } = useLocalStorageValue(
-    "videoId",
-    { defaultValue: "" }
-  ); // TODO: make a video instruction and put it as a initial here
-  const { value: isKaraoke, set: setIsKaraoke } = useLocalStorageValue(
-    "isKaraoke",
-    { defaultValue: true }
-  );
-  const prefix = isKaraoke ? '"karaoke" ' : "";
-
-  const titleIncludesKaraoke = ({ title }) => {
-    const lcTitle = title.toLowerCase();
-    return lcTitle.includes("karaoke") || lcTitle.includes("beat");
-  };
-
-  const { data: recommendedVideos, isLoading: infoLoading } = useQuery(
-    ["videoInfo", curVideoId],
-    () => getVideoInfo(curVideoId),
-    {
-      enabled: !!curVideoId,
-      select: ({ recommendedVideos }) => {
-        if (isKaraoke) {
-          return recommendedVideos.filter(titleIncludesKaraoke);
-        }
-
-        return recommendedVideos;
-      },
-    }
-  );
-
-  const { data: searchResults, isFetching: searchLoading } = useQuery(
-    ["searchResult", prefix + searchTerm],
-    () => getSearchResult({ q: prefix + searchTerm }),
-    {
-      select: (results) => {
-        if (isKaraoke) {
-          return results.filter(titleIncludesKaraoke);
-        }
-
-        return results;
-      },
-    }
-  );
-  const isLoading = searchLoading || infoLoading;
-  const renderList =
-    searchTerm || !recommendedVideos?.length
-      ? searchResults
-      : recommendedVideos;
-
-  return (
-    <>
-      {isLoading && (
-        <>
-          <div className="absolute inset-0 bg-gradient-to-t from-base-300 z-50" />
-          {getSkeletonItems(16).map((s) => (
-            <div
-              key={s}
-              className="card bg-gray-300 animate-pulse w-full aspect-w-4 aspect-h-3"
-            />
-          ))}
-        </>
-      )}
-      {renderList?.map((rcm) => {
-        return !rcm ? null : (
-          <Fragment key={rcm.videoId}>
-            {/* The button to open modal */}
-            <label htmlFor="modal-video" onClick={() => onClick(rcm)}>
-              <div className="card overflow-hidden bg-white shadow hover:shadow-md cursor-pointer flex-auto">
-                <figure className="relative w-full aspect-video">
-                  <Image
-                    unoptimized
-                    src={`https://yt.funami.tech/vi/${rcm.videoId}/mqdefault.jpg`}
-                    priority
-                    alt={rcm.title}
-                    layout="fill"
-                    className="bg-gray-400"
-                  />
-                </figure>
-                <div className="card-body p-2">
-                  <h2 className="font-semibold text-sm 2xl:text-2xl line-clamp-2 h-[2.7em]">
-                    {rcm.title}
-                  </h2>
-                  <p className="text-xs 2xl:text-xl truncate">{rcm.author}</p>
-                </div>
-              </div>
-            </label>
-          </Fragment>
-        );
-      })}
-    </>
-  );
-}
-
-function ListSingerGrid() {
-  const { data: topartists, isLoading } = useQuery(["getArtists"], getArtists, {
-    select: (res) => res.topartists,
-  });
-  const { value: activeIndex, set: setActiveIndex } = useLocalStorageValue(
-    "activeIndex",
-    { defaultValue: 0 }
-  );
-  const { value: searchTerm, set: setSearchTerm } = useLocalStorageValue(
-    "searchTerm",
-    { defaultValue: "" }
-  );
-  const { artist } = topartists || {};
-
-  return (
-    <>
-      {isLoading && (
-        <>
-          <div className="absolute inset-0 bg-gradient-to-t from-base-300 z-50" />
-          {getSkeletonItems(16).map((s) => (
-            <div
-              key={s}
-              className="card bg-gray-300 animate-pulse w-full aspect-w-4 aspect-h-3"
-            />
-          ))}
-        </>
-      )}
-      {artist?.map((artist) => {
-        return (
-          <Fragment key={artist.name}>
-            <div
-              className="card overflow-hidden bg-white shadow hover:shadow-md cursor-pointer flex-auto"
-              onClick={() => {
-                setSearchTerm(artist.name);
-                setActiveIndex(0);
-              }}
-            >
-              <figure className="relative w-full aspect-w-4 aspect-h-3">
-                <Image
-                  unoptimized
-                  src={artist.image.at(-1)["#text"]}
-                  priority
-                  alt={artist.name}
-                  layout="fill"
-                  className="bg-gray-400"
-                />
-              </figure>
-              <div className="card-body p-2">
-                <h2 className="font-semibold text-sm 2xl:text-2xl line-clamp-2 h-[2.7em]">
-                  {artist.name}
-                </h2>
-              </div>
-            </div>
-          </Fragment>
-        );
-      })}
-    </>
-  );
-}
-
-function BottomNavigation() {
-  const { value: activeIndex, set: setActiveIndex } = useLocalStorageValue(
-    "activeIndex",
-    { defaultValue: 0 }
-  );
-  return (
-    <div className="btm-nav static flex-shrink-0">
-      <button
-        className={`text-primary ${activeIndex === 0 ? "active" : ""}`}
-        onClick={() => setActiveIndex(0)}
-      >
-        <MagnifyingGlassIcon className="w-6 h-6" />
-        <span className="btm-nav-label">Tìm kiếm</span>
-      </button>
-      <button
-        className={`text-primary ${activeIndex === 1 ? "active" : ""}`}
-        onClick={() => setActiveIndex(1)}
-      >
-        <MusicalNoteIcon className="w-6 h-6" />
-        <span className="btm-nav-label">Ca sĩ</span>
-      </button>
-      <button
-        className={`text-primary ${activeIndex === 2 ? "active" : ""}`}
-        onClick={() => setActiveIndex(2)}
-      >
-        <RectangleStackIcon className="w-6 h-6" />
-        <span className="btm-nav-label">Thể loại</span>
-      </button>
     </div>
   );
 }
