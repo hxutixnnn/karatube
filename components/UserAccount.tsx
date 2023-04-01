@@ -1,3 +1,7 @@
+"use client";
+
+import { ClockIcon, HeartIcon } from "@heroicons/react/24/outline";
+import Image from "next/image";
 import {
   useAuthState,
   useSignInWithGoogle,
@@ -30,14 +34,60 @@ export default function UserAccount() {
     );
   }
   return (
-    <div className="col-span-full">
-      <div className="flex flex-row justify-between items-center w-full">
-        <div>
-          Email: <strong>{user.email}</strong>
+    <>
+      <div className="col-span-full">
+        <div className="flex flex-col items-center gap-2 w-full">
+          <div className="avatar">
+            <div className="relative w-12 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
+              <Image
+                unoptimized
+                src={user.photoURL}
+                alt="user's avatar"
+                layout="fill"
+              />
+            </div>
+          </div>
+          <div>
+            <div className="text-xl font-bold">{user.displayName}</div>
+            <div className="text-secondary">{user.email}</div>
+          </div>
         </div>
-        <SignOutButton />
       </div>
-    </div>
+
+      <div className="col-span-full">
+        <ul className="p-2 menu menu-compact bg-base-100 rounded-box shadow w-full">
+          <li className="menu-title">
+            <span>Bài hát</span>
+          </li>
+          <li>
+            <a>
+              <HeartIcon className="text-current w-5 h-5" /> Yêu thích
+            </a>
+          </li>
+          <li>
+            <a>
+              <ClockIcon className="text-current w-5 h-5" /> Đã phát gần đây
+            </a>
+          </li>
+          <li className="menu-title">
+            <span>Playlist</span>
+          </li>
+          <li>
+            <a>
+              <span className="badge">1</span> Mới
+            </a>
+          </li>
+          <li>
+            <a>
+              <span className="badge">12</span> Nhạc miền tây
+            </a>
+          </li>
+          <li>
+            <SignOutButton />
+          </li>
+        </ul>
+      </div>
+    </>
   );
 }
 
@@ -74,11 +124,11 @@ function SignOutButton() {
     );
   }
   return (
-    <button
-      className={`btn btn-primary btn-sm ${loading ? "loading" : ""}`}
+    <a
+      className={`btn btn-ghost text-error ${loading ? "loading" : ""}`}
       onClick={() => signOut()}
     >
       Đăng Xuất
-    </button>
+    </a>
   );
 }
