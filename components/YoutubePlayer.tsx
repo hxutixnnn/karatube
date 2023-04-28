@@ -144,7 +144,7 @@ function YoutubePlayer({ videoId, nextSong, className = "", extra = null }) {
         {!videoId ? (
           <div className="h-full w-full flex items-center justify-center bg-black">
             <Image
-              src="/icon-192.png"
+              src="/assets/icons/icon.svg"
               width={48}
               height={48}
               className=""

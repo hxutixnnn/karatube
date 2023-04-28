@@ -80,7 +80,7 @@ function App({ Component, pageProps }) {
       )}
       <QueryClientProvider client={queryClient}>
         <Component {...pageProps} />
-        <ReactQueryDevtools />
+        {/* <ReactQueryDevtools /> */}
       </QueryClientProvider>
       <Analytics />
     </>
