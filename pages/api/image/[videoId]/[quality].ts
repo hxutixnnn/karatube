@@ -2,7 +2,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
 // const origin = 'invidious.drivet.xyz';
-const origin = "yt.funami.tech";
+const origin = "invidious.io.lol";
 
 export default async function handler(
   req: NextApiRequest,

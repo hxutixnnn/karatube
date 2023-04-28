@@ -234,7 +234,7 @@ function HomePage() {
                     <figure className="relative w-full aspect-video">
                       <Image
                         unoptimized
-                        src={`https://yt.funami.tech/vi/${selectedVideo?.videoId}/mqdefault.jpg`}
+                        src={`https://invidious.io.lol/vi/${selectedVideo?.videoId}/mqdefault.jpg`}
                         priority
                         alt={selectedVideo?.title}
                         layout="fill"
