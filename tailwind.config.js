@@ -5,7 +5,6 @@ module.exports = {
   ],
   plugins: [
     require("@tailwindcss/aspect-ratio"),
-    require("@tailwindcss/line-clamp"),
     require("tailwind-scrollbar")({ nocompatible: true }),
     require("daisyui"),
   ],
@@ -13,7 +12,7 @@ module.exports = {
     themes: [
       {
         light: {
-          ...require("daisyui/src/colors/themes")["[data-theme=light]"],
+          ...require("daisyui/src/theming/themes")["[data-theme=light]"],
           primary: "#ef4444",
           secondary: "#6b7280",
           "--rounded-box": "0.2rem",
