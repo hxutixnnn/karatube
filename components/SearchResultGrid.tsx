@@ -1,9 +1,9 @@
 import Image from "next/image";
 import { Fragment } from "react";
 import { useQuery } from "react-query";
+import { useKaraokeState } from "../hooks/karaoke";
 import { RecommendedVideo, SearchResult } from "../types/invidious";
 import { getSearchResult, getSkeletonItems, getVideoInfo } from "../utils/api";
-import { useKaraokeState } from "../hooks/karaoke";
 
 export default function SearchResultGrid({
   onClick = () => {},
@@ -74,7 +74,7 @@ export default function SearchResultGrid({
                 <figure className="relative w-full aspect-video">
                   <Image
                     unoptimized
-                    src={`https://invidious.io.lol/vi/${rcm.videoId}/mqdefault.jpg`}
+                    src={`${process.env.NEXT_PUBLIC_INVIDIOUS_URL}/vi/${rcm.videoId}/mqdefault.jpg`}
                     priority
                     alt={rcm.title}
                     layout="fill"

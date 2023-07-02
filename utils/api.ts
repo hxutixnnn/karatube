@@ -3,7 +3,7 @@ import { GetArtists, GetTopics } from "../types";
 import { SearchResult, VideoResponse } from "../types/invidious";
 
 const invidious = axios.create({
-  baseURL: "https://invidious.io.lol/",
+  baseURL: process.env.NEXT_PUBLIC_INVIDIOUS_URL,
 });
 
 export const getVideoInfo = async (videoId: string) => {

@@ -1,9 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
 
-// const origin = 'invidious.drivet.xyz';
-const origin = "invidious.io.lol";
-
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -17,7 +14,7 @@ export default async function handler(
 
   try {
     const data = await fetch(
-      `https://${origin}/vi/${videoId}/${rawQuality}.jpg`
+      `${process.env.NEXT_PUBLIC_INVIDIOUS_URL}/vi/${videoId}/${rawQuality}.jpg`
     );
 
     data.headers.forEach((value, name) => res.setHeader(name, value));
