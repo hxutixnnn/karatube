@@ -6,6 +6,11 @@ const invidious = axios.create({
   baseURL: process.env.NEXT_PUBLIC_INVIDIOUS_URL,
 });
 
+export const getTrendingVideos = async () => {
+  const res = await invidious.get<VideoResponse[]>("/api/v1/trending?type=music&region=VN");
+  return res.data;
+};
+
 export const getVideoInfo = async (videoId: string) => {
   if (!videoId) {
     throw new Error("Missing query key!");
