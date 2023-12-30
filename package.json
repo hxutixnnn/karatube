@@ -17,7 +17,10 @@
     "embla-carousel-react": "^7.1.0",
     "next": "14.0.1",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "video.js": "8.6.1",
+    "youtubei": "^1.2.1",
+    "youtubei.js": "^8.1.0"
   },
   "devDependencies": {
     "@types/node": "20.8.10",
