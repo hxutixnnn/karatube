@@ -1,29 +1,17 @@
 import {
-  AppShell,
-  AppShellAside,
-  AppShellFooter,
-  AppShellHeader,
-  AppShellMain,
-  AppShellNavbar,
-  AspectRatio,
   Box,
-  Badge,
   Container,
   Group,
-  Image,
   Input,
-  Overlay,
   Paper,
-  Skeleton,
+  SimpleGrid,
   Stack,
-  Text,
   Title,
-  Button,
-  Space,
 } from "@mantine/core";
 import { IconPlayerPlayFilled } from "@tabler/icons-react";
 import { Client } from "youtubei";
-import { HeaderCarousel } from "./components/HeaderCarousel";
+import { FeaturedVideosCarousel } from "./components/carousel/featured-video";
+import { VideoCard } from "./components/card/video";
 
 const youtube = new Client();
 
@@ -46,83 +34,47 @@ const KaraTubeLogo = () => (
 );
 
 export default async function HomePage() {
-  const videos = await youtube.search("karaoke", {
+  const videos = await youtube.search("karaoke|tone", {
     type: "video",
     ql: "vi",
     regionCode: "VN",
   });
 
   return (
-    <AppShell
-      layout="alt"
-      header={{ height: 60 }}
-      footer={{ height: 60 }}
-      navbar={{ width: 300, breakpoint: "sm", collapsed: { mobile: false } }}
-      aside={{
-        width: 300,
-        breakpoint: "md",
-        collapsed: { desktop: true, mobile: true },
-      }}
-      // p="md"
-    >
-      <AppShellHeader p="xs">
+    <Container component={Stack}>
+      <Group wrap="nowrap" p="md">
+        <KaraTubeLogo />
         <Input
           variant="filled"
           placeholder="Chỉ là không cùng nhau, Ai chung tình được mãi,..."
-          w="100%"
+          w="50%"
         />
-      </AppShellHeader>
-      <AppShellNavbar p="md">
-        <KaraTubeLogo />
-      </AppShellNavbar>
-      <AppShellMain>
-        <Box bg="gray.8" p="md">
-          <Paper
-            radius="lg"
-            withBorder={false}
-            maw={800}
-            mx="auto"
-            style={{ overflow: "hidden" }}
-          >
-            <AspectRatio ratio={16 / 9}>
-              <Image
-                src="https://i.ytimg.com/vi/OeBVIsGkcrA/hq720.jpg"
-                alt="Demo"
-              />
-              <Overlay
-                gradient="linear-gradient(45deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 100%)"
-                // opacity={0.85}
-                zIndex={0}
-              />
-              <Box p="xl">
-                <Stack align="flex-start" justify="flex-end" w="100%" h="100%">
-                  <Badge color="red.8">MỚI</Badge>
-                  <Box>
-                    <Title c="white">
-                      Karaoke | Cơn Mơ Băng Giá (Bằng Kiều)
-                    </Title>
-                    <Text c="white">Thuy Nga TV</Text>
-                  </Box>
-                  <Button color="red.8">Hát Ngay</Button>
-                </Stack>
-              </Box>
-            </AspectRatio>
-          </Paper>
-        </Box>
-        <Space h="md" />
-        <Box p="md">
-          <HeaderCarousel
-            data={videos.items.map((item) => ({
-              title: item.title,
-              category: item.channel?.name ?? "Unknown",
-              image: item.thumbnails[0].url,
-            }))}
+      </Group>
+
+      <Box p="6">
+        <FeaturedVideosCarousel
+          data={videos.items.map((item) => ({
+            title: item.title,
+            image: item.thumbnails[0].url,
+            category: item.channel?.name ?? "Unknown",
+            badge: "MỚI",
+          }))}
+        />
+      </Box>
+
+      <Title>Karaoke Youtube Mới Nhất</Title>
+
+      <SimpleGrid cols={3} spacing={0}>
+        {videos.items.map((item) => (
+          <VideoCard
+            key={item.id}
+            title={item.title}
+            image={item.thumbnails[0].url}
+            category={item.channel?.name ?? ""}
+            views={item.viewCount ?? 0}
           />
-        </Box>
-        {/* </Container> */}
-      </AppShellMain>
-      <AppShellAside p="md">Aside</AppShellAside>
-      <AppShellFooter p="md">Footer</AppShellFooter>
-    </AppShell>
+        ))}
+      </SimpleGrid>
+    </Container>
   );
 }
