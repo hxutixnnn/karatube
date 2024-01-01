@@ -1,20 +1,18 @@
-import { Group, Paper, Title } from "@mantine/core";
+import { Box, Group, GroupProps, Paper, Text } from "@mantine/core";
 import { IconPlayerPlayFilled } from "@tabler/icons-react";
 
-export const KaraTubeLogo = () => (
-  <Group gap={0} align="center">
-    <Paper
-      px="sm"
-      py="xs"
-      bg="red.8"
-      mr="xs"
-      radius="md"
-      c="white"
-      display="flex"
-    >
-      <IconPlayerPlayFilled />
+export const KaraTubeLogo = (props: GroupProps) => (
+  <Group gap="xs" align="center" {...props}>
+    <Paper px="8" py="4" bg="red" radius="md" c="white" display="flex">
+      <IconPlayerPlayFilled size={16} />
     </Paper>
-    <Title c="blue.8">Kara</Title>
-    <Title c="red.8">Tube</Title>
+    <Box>
+      <Text component="span" c="blue" fz="xl" fw="bold">
+        Kara
+      </Text>
+      <Text component="span" c="red" fz="xl" fw="bold">
+        Tube
+      </Text>
+    </Box>
   </Group>
 );

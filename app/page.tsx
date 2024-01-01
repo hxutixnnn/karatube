@@ -1,7 +1,5 @@
-import { MainContent } from "./home/main";
+import { redirect } from "next/navigation";
 
-export default async function HomePage() {
-  return (
-    <MainContent />
-  );
+export default function HomePage() {
+  return redirect("/home");
 }

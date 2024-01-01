@@ -51,14 +51,14 @@ export const FeaturedVideoCard = ({
       />
       <Box p="xl">
         <Stack align="flex-start" justify="flex-end" w="100%" h="100%">
-          <Badge color="red.8">{badge}</Badge>
+          <Badge>{badge}</Badge>
           <Box>
             <Title order={3} c="white" w="70%">
               {title}
             </Title>
             <Text c="white">{category}</Text>
           </Box>
-          <Button color="red.8">Hát Ngay</Button>
+          <Button>Hát Ngay</Button>
         </Stack>
       </Box>
     </AspectRatio>

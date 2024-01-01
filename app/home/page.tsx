@@ -1,11 +1,11 @@
-import { Box, Container, SimpleGrid, Stack, Title } from "@mantine/core";
+import { Box, SimpleGrid, Stack, Title } from "@mantine/core";
 import { Client, SearchResult } from "youtubei";
 import { VideoCard } from "../components/card/video";
 import { FeaturedVideosCarousel } from "../components/carousel/featured-video";
 
 const youtube = new Client();
 
-export async function MainContent() {
+export default async function MainContent() {
   let videos: SearchResult<"video">;
   try {
     videos = await youtube.search("karaoke|tone", {
@@ -28,7 +28,7 @@ export async function MainContent() {
   //     .trim() + ",...";
 
   return (
-    <Container component={Stack}>
+    <Stack>
       <Box p="6">
         <FeaturedVideosCarousel
           data={videos.items.map((item) => ({
@@ -53,6 +53,6 @@ export async function MainContent() {
           />
         ))}
       </SimpleGrid>
-    </Container>
+    </Stack>
   );
 }
