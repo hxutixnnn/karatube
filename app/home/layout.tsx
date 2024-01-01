@@ -5,24 +5,22 @@ import {
   Group,
   MantineTheme,
   NavLink,
-  Stack,
-  useMantineTheme,
+  Stack
 } from "@mantine/core";
-import { useDisclosure, useMediaQuery } from "@mantine/hooks";
+import { useDisclosure } from "@mantine/hooks";
 import {
   IconFlame,
   IconHeart,
   IconHome,
-  IconList,
-  IconUser,
+  IconList
 } from "@tabler/icons-react";
 import React from "react";
 import { KaraTubeLogo } from "../components/logo/karatube";
+import useIsMobile from "../hooks/useIsMobile";
 import { MainHeader } from "./header";
 
 const BottomNavigation = ({ vertical }: { vertical?: boolean }) => {
-  const theme = useMantineTheme();
-  const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.xs})`);
+  const isMobile = useIsMobile();
   const Wrapper = vertical ? Stack : Group;
   const navLinkStyle = (theme: MantineTheme) =>
     isMobile
@@ -78,7 +76,7 @@ const BottomNavigation = ({ vertical }: { vertical?: boolean }) => {
         styles={styles}
         // active
       />
-      {isMobile && (
+      {/* {isMobile && (
         <NavLink
           href="#required-for-focus"
           label="Tài khoản"
@@ -88,21 +86,20 @@ const BottomNavigation = ({ vertical }: { vertical?: boolean }) => {
           styles={styles}
           // active
         />
-      )}
+      )} */}
     </Wrapper>
   );
 };
 
 function HomeLayout({ children }: { children: React.ReactNode }) {
   const [opened, { toggle }] = useDisclosure();
-  const theme = useMantineTheme();
-  const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.xs})`);
+  const isMobile = useIsMobile();
   const showNav = isMobile;
   const bottomNavSize = 52;
   return (
     <AppShell
       layout="alt"
-      header={{ height: 56, collapsed: false }}
+      header={{ height: isMobile ? 106 : 56, collapsed: false }}
       footer={{ height: 65, collapsed: !isMobile }}
       navbar={{
         width: 160,
@@ -115,7 +112,7 @@ function HomeLayout({ children }: { children: React.ReactNode }) {
         collapsed: { desktop: true, mobile: true },
       }}
     >
-      <AppShell.Header p="xs" withBorder={false}>
+      <AppShell.Header py="xs" px={{ base: '0', md: 'xs'}} withBorder={false}>
         <Container>
           <MainHeader searchPlaceholder="Ngày mai người ta lấy chồng, Ai chung tình được mãi,..." />
         </Container>
@@ -128,7 +125,7 @@ function HomeLayout({ children }: { children: React.ReactNode }) {
       </AppShell.Navbar>
       <AppShell.Main>
         {/* <MainHeader searchPlaceholder="Search..." /> */}
-        <Container>{children}</Container>
+        <Container p={{ base: 'xs', md: 'md'}}>{children}</Container>
       </AppShell.Main>
       <AppShell.Aside p="xs">Aside</AppShell.Aside>
       <AppShell.Footer>

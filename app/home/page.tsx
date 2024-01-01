@@ -29,7 +29,7 @@ export default async function MainContent() {
 
   return (
     <Stack>
-      <Box p="6">
+      <Box p={{ base: '0', md: '6'}}>
         <FeaturedVideosCarousel
           data={videos.items.map((item) => ({
             title: item.title,
@@ -40,9 +40,9 @@ export default async function MainContent() {
         />
       </Box>
 
-      <Title>Karaoke Youtube Mới Nhất</Title>
+      <Title order={3}>Karaoke Youtube Mới Nhất</Title>
 
-      <SimpleGrid cols={3} spacing={0}>
+      <SimpleGrid cols={{ base: 2, md: 3 }} spacing={0}>
         {videos.items.map((item) => (
           <VideoCard
             key={item.id}
