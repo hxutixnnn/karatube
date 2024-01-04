@@ -1,4 +1,5 @@
 "use client";
+
 import {
   AspectRatio,
   Card,
@@ -11,6 +12,7 @@ import {
 import { useHover } from "@mantine/hooks";
 import { IconPlayerPlayFilled } from "@tabler/icons-react";
 import Link from "next/link";
+import useIsDark from "../../hooks/useIsDark";
 
 export interface CardProps {
   image: string;
@@ -18,11 +20,19 @@ export interface CardProps {
   category: string;
   views: number;
 }
+
 export function VideoCard({ image, title, category, views }: CardProps) {
   const { ref, hovered } = useHover();
+  const isDark = useIsDark();
   return (
     <UnstyledButton component={Link} href="/">
-      <Card ref={ref} radius="10" p="6" {...(hovered && { bg: "gray.1" })}>
+      <Card
+        ref={ref}
+        radius="10"
+        p="6"
+        bg="transparent"
+        {...(hovered && { bg: isDark ? 'dark.6' : 'gray.1' })}
+      >
         <AspectRatio
           ratio={16 / 9}
           style={(theme) => ({

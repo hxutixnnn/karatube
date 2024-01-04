@@ -1,4 +1,4 @@
-import { ActionIcon, Group, Input } from "@mantine/core";
+import { ActionIcon, Group, GroupProps, Input } from "@mantine/core";
 import {
   IconBellFilled,
   IconSearch,
@@ -9,13 +9,14 @@ import useIsMobile from "../hooks/useIsMobile";
 
 export const MainHeader = ({
   searchPlaceholder,
+  ...props
 }: {
   searchPlaceholder?: string;
-}) => {
+} & GroupProps) => {
   const isMobile = useIsMobile();
   return (
-    <Group justify="space-between" wrap={isMobile ? "wrap" : "nowrap"}>
-      {isMobile && <KaraTubeLogo />}
+    <Group justify="space-between" wrap={isMobile ? "wrap" : "nowrap"} {...props}>
+      <KaraTubeLogo />
       <Input
         style={{ order: isMobile ? 2 : 1 }}
         variant="filled"
