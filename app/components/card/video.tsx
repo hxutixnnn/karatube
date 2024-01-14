@@ -15,17 +15,18 @@ import Link from "next/link";
 import useIsDark from "../../hooks/useIsDark";
 
 export interface CardProps {
+  videoId: string;
   image: string;
   title: string;
   category: string;
   views: number;
 }
 
-export function VideoCard({ image, title, category, views }: CardProps) {
+export function VideoCard({ videoId, image, title, category, views }: CardProps) {
   const { ref, hovered } = useHover();
   const isDark = useIsDark();
   return (
-    <UnstyledButton component={Link} href="/">
+    <UnstyledButton component={Link} href={`/karaoke/${videoId}`}>
       <Card
         ref={ref}
         radius="10"

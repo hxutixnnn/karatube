@@ -4,10 +4,10 @@ import {
   IconSearch,
   IconUserFilled,
 } from "@tabler/icons-react";
-import { KaraTubeLogo } from "../components/logo/karatube";
+import { KtLogo } from "../components/logo/KtLogo";
 import useIsMobile from "../hooks/useIsMobile";
 
-export const MainHeader = ({
+export const KtHeader = ({
   searchPlaceholder,
   ...props
 }: {
@@ -16,7 +16,7 @@ export const MainHeader = ({
   const isMobile = useIsMobile();
   return (
     <Group justify="space-between" wrap={isMobile ? "wrap" : "nowrap"} {...props}>
-      <KaraTubeLogo />
+      <KtLogo />
       <Input
         style={{ order: isMobile ? 2 : 1 }}
         variant="filled"

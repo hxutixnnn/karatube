@@ -1,9 +1,8 @@
 import { Box, SimpleGrid, Stack, Title } from "@mantine/core";
-import { Client, SearchResult } from "youtubei";
+import { SearchResult } from "youtubei";
 import { VideoCard } from "../components/card/video";
 import { FeaturedVideosCarousel } from "../components/carousel/featured-video";
-
-const youtube = new Client();
+import youtube from "../utils/youtube";
 
 export default async function MainContent() {
   let videos: SearchResult<"video">;
@@ -46,6 +45,7 @@ export default async function MainContent() {
         {videos.items.map((item) => (
           <VideoCard
             key={item.id}
+            videoId={item.id}
             title={item.title}
             image={item.thumbnails[0].url}
             category={item.channel?.name ?? ""}

@@ -587,6 +587,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@videojs/http-streaming@npm:3.9.1":
+  version: 3.9.1
+  resolution: "@videojs/http-streaming@npm:3.9.1"
+  dependencies:
+    "@babel/runtime": "npm:^7.12.5"
+    "@videojs/vhs-utils": "npm:4.0.0"
+    aes-decrypter: "npm:4.0.1"
+    global: "npm:^4.4.0"
+    m3u8-parser: "npm:^7.1.0"
+    mpd-parser: "npm:^1.3.0"
+    mux.js: "npm:7.0.2"
+    video.js: "npm:^7 || ^8"
+  peerDependencies:
+    video.js: ^7 || ^8
+  checksum: af55fda655823afffce57e97d8de70861a35e5b5534f8c83bf9d9fdc4123c1531f74f45116b429a7c08c96afe612f5fa16b8d8464f490de1f49c0250b2f376dd
+  languageName: node
+  linkType: hard
+
 "@videojs/vhs-utils@npm:4.0.0":
   version: 4.0.0
   resolution: "@videojs/vhs-utils@npm:4.0.0"
@@ -2389,6 +2407,7 @@ __metadata:
     react-dom: "npm:18.2.0"
     typescript: "npm:5.2.2"
     video.js: "npm:8.6.1"
+    videojs-youtube: "npm:^3.0.1"
     youtubei: "npm:^1.2.1"
     youtubei.js: "npm:^8.1.0"
   languageName: unknown
@@ -3685,6 +3704,28 @@ __metadata:
   languageName: node
   linkType: hard
 
+"video.js@npm:5.x || 6.x || 7.x || 8.x":
+  version: 8.9.0
+  resolution: "video.js@npm:8.9.0"
+  dependencies:
+    "@babel/runtime": "npm:^7.12.5"
+    "@videojs/http-streaming": "npm:3.9.1"
+    "@videojs/vhs-utils": "npm:^4.0.0"
+    "@videojs/xhr": "npm:2.6.0"
+    aes-decrypter: "npm:^4.0.1"
+    global: "npm:4.4.0"
+    keycode: "npm:2.2.0"
+    m3u8-parser: "npm:^7.1.0"
+    mpd-parser: "npm:^1.2.2"
+    mux.js: "npm:^7.0.1"
+    safe-json-parse: "npm:4.0.0"
+    videojs-contrib-quality-levels: "npm:4.0.0"
+    videojs-font: "npm:4.1.0"
+    videojs-vtt.js: "npm:0.15.5"
+  checksum: 4b9139659cfea4cc5d58b57d0ccc693dffaaf40bd6e53c6ebf90389963459747b2a917a5e3f23390595abd5580b85b0ae73ed894ed72a071baa4a05e47de955d
+  languageName: node
+  linkType: hard
+
 "video.js@npm:8.6.1":
   version: 8.6.1
   resolution: "video.js@npm:8.6.1"
@@ -3753,6 +3794,17 @@ __metadata:
   dependencies:
     global: "npm:^4.3.1"
   checksum: fd595a96c7bee3cb086f58a750d784a8d52db29b3ddf90a079cd283b097c36f976ac9f3835af53dfe5bdac5c7ccbd03db77abbaa37e38bfb3cbe4843e261e02b
+  languageName: node
+  linkType: hard
+
+"videojs-youtube@npm:^3.0.1":
+  version: 3.0.1
+  resolution: "videojs-youtube@npm:3.0.1"
+  dependencies:
+    video.js: "npm:5.x || 6.x || 7.x || 8.x"
+  peerDependencies:
+    video.js: 5.x || 6.x || 7.x || 8.x
+  checksum: 0d3005cf738b31a491a5ff859d4f3cbe0a95e7915da1dc3ba0f9ce133f30e43c568f3623640cefd300a13e981794aa9dbc03aa6cc7ed2a0f05e3b67ce668675f
   languageName: node
   linkType: hard
 

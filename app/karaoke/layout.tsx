@@ -13,7 +13,7 @@ import {
 import { useMediaQuery } from "@mantine/hooks";
 import { IconFlame, IconHeart, IconHome, IconList } from "@tabler/icons-react";
 import React from "react";
-import { MainHeader } from "./header";
+import { KtHeader } from "./KtHeader";
 
 const BottomNavigation = ({ vertical }: { vertical?: boolean }) => {
   const Wrapper = vertical ? Stack : Group;
@@ -100,7 +100,7 @@ function HomeLayout({ children,  }: { children: React.ReactNode }) {
         style={{ overflow: "hidden" }}
       >
         <Container>
-          <MainHeader searchPlaceholder="Ngày mai người ta lấy chồng, Ai chung tình được mãi,..." />
+          <KtHeader searchPlaceholder="Ngày mai người ta lấy chồng, Ai chung tình được mãi,..." />
         </Container>
       </AppShell.Header>
       <AppShell.Main>

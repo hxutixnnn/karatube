@@ -19,6 +19,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "video.js": "8.6.1",
+    "videojs-youtube": "^3.0.1",
     "youtubei": "^1.2.1",
     "youtubei.js": "^8.1.0"
   },
