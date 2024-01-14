@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { ElementRef, useEffect, useRef } from "react";
 import videojs from "video.js";
 import Component from "video.js/dist/types/component";
 import "video.js/dist/video-js.css";
@@ -18,7 +18,7 @@ const initialOptions = {
 };
 
 export function KtVideoPlayer({ videoId }: { videoId: string }) {
-  const videoNode = useRef(null);
+  const videoNode = useRef<ElementRef<"video">>(null);
   const player = useRef<Component | null>(null);
   const initialized = useRef(false);
 
@@ -34,7 +34,8 @@ export function KtVideoPlayer({ videoId }: { videoId: string }) {
             src: `https://www.youtube.com/watch?v=${videoId}`,
           },
         ],
-      }).ready(function () {
+      })
+      .ready(() => {
         console.log("Player Ready");
       });
     }
@@ -46,9 +47,5 @@ export function KtVideoPlayer({ videoId }: { videoId: string }) {
     };
   }, [videoId]);
 
-  return (
-    <div className="App">
-      <video ref={videoNode} className="video-js" />
-    </div>
-  );
+  return <video ref={videoNode} className="video-js" />;
 }

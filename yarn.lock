@@ -156,22 +156,22 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mantine/carousel@npm:^7.3.2":
-  version: 7.3.2
-  resolution: "@mantine/carousel@npm:7.3.2"
+"@mantine/carousel@npm:^7.4.1":
+  version: 7.4.1
+  resolution: "@mantine/carousel@npm:7.4.1"
   peerDependencies:
-    "@mantine/core": 7.3.2
-    "@mantine/hooks": 7.3.2
+    "@mantine/core": 7.4.1
+    "@mantine/hooks": 7.4.1
     embla-carousel-react: ">=7.0.0"
     react: ^18.2.0
     react-dom: ^18.2.0
-  checksum: c5ed5827cf9a269df274b6fec6532bd6941630b5559cb06a13dab6a784bcdb0f1efff86571b86782497ed284e05a8540dee1c5492e653ef2da7fb8c15f4b6c76
+  checksum: 93ba37d907b6aa87ad587e0f6986db9aaa6bef241e757071f3a6ca24e03fd8b73f23fd13dc2524acf9d6a7dc024f0ca0b8abbef7acbee6ae41dd1c4b9ce81798
   languageName: node
   linkType: hard
 
-"@mantine/core@npm:7.3.2":
-  version: 7.3.2
-  resolution: "@mantine/core@npm:7.3.2"
+"@mantine/core@npm:^7.4.1":
+  version: 7.4.1
+  resolution: "@mantine/core@npm:7.4.1"
   dependencies:
     "@floating-ui/react": "npm:^0.24.8"
     clsx: "npm:2.0.0"
@@ -180,19 +180,19 @@ __metadata:
     react-textarea-autosize: "npm:8.5.3"
     type-fest: "npm:^3.13.1"
   peerDependencies:
-    "@mantine/hooks": 7.3.2
+    "@mantine/hooks": 7.4.1
     react: ^18.2.0
     react-dom: ^18.2.0
-  checksum: 9f4b67345617562e2f59121e75743d3ad1d99c09f3f62f62268e8d5a491d85ca3aedaae59a2c0f928ef67975a84a65dba445a3b1556c42d59129476c34949140
+  checksum: a9ed632fabb61438369284ee8d8afa5fd6edcce34f395e5b455121099e4e579795fb086ee6753c07e23cf9fa14dbc9a1a3b033244ffebbe1e390269470e994ca
   languageName: node
   linkType: hard
 
-"@mantine/hooks@npm:7.3.2":
-  version: 7.3.2
-  resolution: "@mantine/hooks@npm:7.3.2"
+"@mantine/hooks@npm:^7.4.1":
+  version: 7.4.1
+  resolution: "@mantine/hooks@npm:7.4.1"
   peerDependencies:
     react: ^18.2.0
-  checksum: 9dce135264a0c6199df9887aa4456312007973ffc4aaca4219d9339509f52e07c26927c61cdf2bfd6df4bc934ce5b6abb784565e512455b0e36038bcec969c80
+  checksum: 588e8e9e308671476f6d1bfd50e5caf046bf78628360697228917f3f8f08a58cf5429f745c8645e8b38904bce0878c7ff306c97a611ac82a11f337237d89a1dc
   languageName: node
   linkType: hard
 
@@ -2388,9 +2388,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "mantine-minimal-next-template@workspace:."
   dependencies:
-    "@mantine/carousel": "npm:^7.3.2"
-    "@mantine/core": "npm:7.3.2"
-    "@mantine/hooks": "npm:7.3.2"
+    "@mantine/carousel": "npm:^7.4.1"
+    "@mantine/core": "npm:^7.4.1"
+    "@mantine/hooks": "npm:^7.4.1"
     "@tabler/icons-react": "npm:^2.44.0"
     "@types/node": "npm:20.8.10"
     "@types/react": "npm:18.2.36"

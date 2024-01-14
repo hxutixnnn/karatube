@@ -1,0 +1,8 @@
+.body {
+  --mantine-color-body: var(--mantine-color-dark-8);
+}
+
+.paper {
+  background-color: var(--mantine-color-dark-9);
+  border-color: var(--mantine-color-dark-6);
+}
