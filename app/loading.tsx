@@ -1,9 +1,9 @@
-import { Box, LoadingOverlay } from "@mantine/core";
+import { Box, Loader } from "@mantine/core";
 
 export default function PageLoading() {
   return (
     <Box pos="relative">
-      <LoadingOverlay />
+      <Loader />
     </Box>
   );
 }

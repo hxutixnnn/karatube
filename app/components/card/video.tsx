@@ -8,10 +8,10 @@ import {
   Overlay,
   Text,
   UnstyledButton,
+  UnstyledButtonProps,
 } from "@mantine/core";
 import { useHover } from "@mantine/hooks";
 import { IconPlayerPlayFilled } from "@tabler/icons-react";
-import Link from "next/link";
 import useIsDark from "../../hooks/useIsDark";
 
 export interface CardProps {
@@ -20,19 +20,32 @@ export interface CardProps {
   title: string;
   category: string;
   views: number;
+  onClick?: () => void;
 }
 
-export function VideoCard({ videoId, image, title, category, views }: CardProps) {
+export function VideoCard({
+  videoId,
+  image,
+  title,
+  category,
+  views,
+  ...props
+}: CardProps & UnstyledButtonProps) {
   const { ref, hovered } = useHover();
   const isDark = useIsDark();
+
   return (
-    <UnstyledButton component={Link} href={`/karaoke/${videoId}`}>
+    <UnstyledButton
+      // component={Link}
+      // href={{ pathname: "/", query: { q: searchParams.get("q"), v: videoId } }}
+      {...props}
+    >
       <Card
         ref={ref}
         radius="10"
         p="6"
         bg="transparent"
-        {...(hovered && { bg: isDark ? 'dark.6' : 'gray.1' })}
+        {...(hovered && { bg: isDark ? "dark.6" : "gray.1" })}
       >
         <AspectRatio
           ratio={16 / 9}

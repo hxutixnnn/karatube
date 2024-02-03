@@ -49,11 +49,11 @@ export const FeaturedVideoCard = ({
         // opacity={0.85}
         zIndex={0}
       />
-      <Box p="xl">
+      <Box p="xs">
         <Stack align="flex-start" justify="flex-end" w="100%" h="100%">
           <Badge>{badge}</Badge>
           <Box>
-            <Title order={3} c="white" w="70%">
+            <Title order={6} c="white" w="70%">
               {title}
             </Title>
             <Text c="white">{category}</Text>

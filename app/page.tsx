@@ -1,5 +1,5 @@
-import { redirect } from "next/navigation";
+import { KtHomePage } from "./components/KtHomePage";
 
-export default function HomePage() {
-  return redirect("/karaoke");
+export default function Page() {
+  return <KtHomePage />
 }
