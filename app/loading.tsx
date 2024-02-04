@@ -1,9 +1,9 @@
-import { Box, Loader } from "@mantine/core";
+import { Center, Loader } from "@mantine/core";
 
 export default function PageLoading() {
   return (
-    <Box pos="relative">
+    <Center h="100%">
       <Loader />
-    </Box>
+    </Center>
   );
 }

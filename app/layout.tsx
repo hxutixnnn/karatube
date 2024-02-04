@@ -1,13 +1,22 @@
 import { MantineProvider } from "@mantine/core";
+import type { Metadata, Viewport } from "next";
 import { theme } from "../theme";
 
 import "@mantine/core/styles.css";
 import "@mantine/carousel/styles.css";
 // import classes from "./app.module.css";
 
-export const metadata = {
-  title: "Mantine Next.js template",
-  description: "I am using Mantine with Next.js!",
+export const metadata: Metadata = {
+  title: "KaraTube | Free Karaoke YouTube Online",
+  description: "Free Karaoke YouTube Online",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  colorScheme: "dark",
 };
 
 export default function RootLayout({ children }: { children: any }) {
@@ -15,10 +24,6 @@ export default function RootLayout({ children }: { children: any }) {
     <html lang="en" data-mantine-color-scheme="dark">
       <head>
         <link rel="shortcut icon" href="/favicon.svg" />
-        <meta
-          name="viewport"
-          content="minimum-scale=1, initial-scale=1, maximum-scale=1, width=device-width, user-scalable=no"
-        />
       </head>
       <body
       // className={classes.body}
