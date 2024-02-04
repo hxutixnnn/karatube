@@ -2,20 +2,14 @@
 
 import {
   AppShell,
-  Group,
   Image,
   Input,
-  NavLink,
   ScrollArea,
   Stack,
   Title
 } from "@mantine/core";
 import {
-  IconFlame,
-  IconHeart,
-  IconHome,
-  IconList,
-  IconSearch,
+  IconSearch
 } from "@tabler/icons-react";
 import { useState } from "react";
 import { useFormState } from "react-dom";
@@ -82,6 +76,12 @@ export function KtHomePage() {
                 rightSection={<IconSearch size={16} />}
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
+                autoCapitalize="none"
+                autoComplete="off"
+                autoCorrect="off"
+                spellCheck="false"
+                inputMode="search"
+                onKeyUp={(e) => e.key === "Enter" && e.currentTarget.blur()}
               />
             </KtHeader>
           </AppShell.Section>
