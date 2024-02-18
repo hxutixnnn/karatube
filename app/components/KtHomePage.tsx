@@ -2,15 +2,14 @@
 
 import {
   AppShell,
-  Image,
   Input,
   ScrollArea,
   Stack,
-  Title
+  Title,
+  useMantineTheme,
 } from "@mantine/core";
-import {
-  IconSearch
-} from "@tabler/icons-react";
+import { useMediaQuery, useViewportSize } from "@mantine/hooks";
+import { IconSearch } from "@tabler/icons-react";
 import { useState } from "react";
 import { useFormState } from "react-dom";
 import { searchAction } from "../actions/search.action";
@@ -19,72 +18,122 @@ import { KtGridResults } from "./KtGridResults";
 import { KtHeader } from "./KtHeader";
 import { KtVideoPlayer } from "./KtVideoPlayer";
 
-export function KtHomePage() {
-  const [query, setQuery] = useState("");
-  const [videoId, setVideoId] = useState("");
+const defaultVideoId = "Vv2mtx5ZWwE";
+
+function KtSearchableHeader({
+  value,
+  onChangeText,
+}: {
+  value: string;
+  onChangeText: (value: string) => void;
+}) {
+  return (
+    <KtHeader>
+      <Input
+        name="query"
+        required
+        variant="filled"
+        w="100%"
+        radius="xl"
+        placeholder="Ngày mai người ta lấy chồng, Ai chung tình được mãi,..."
+        rightSection={<IconSearch size={16} />}
+        value={value}
+        onChange={(e) => onChangeText(e.target.value)}
+        autoCapitalize="none"
+        autoComplete="off"
+        autoCorrect="off"
+        spellCheck="false"
+        inputMode="search"
+        onKeyUp={(e) => e.key === "Enter" && e.currentTarget.blur()}
+      />
+    </KtHeader>
+  );
+}
+
+function MobileLayout({
+  videoId,
+  setVideoId,
+  query,
+  setQuery,
+}: {
+  videoId: string;
+  setVideoId: (value: string) => void;
+  query: string;
+  setQuery: (value: string) => void;
+}) {
+  const { width } = useViewportSize();
   const [{ data, error }, formAction] = useFormState(searchAction, {
     // TODO: init data on first load
     data: [],
     error: null,
   });
-
   if (error) return <Title c="red">{JSON.stringify(error)}</Title>;
-
-  // const [opened, { toggle }] = useDisclosure();
-  // const theme = useMantineTheme();
-  // const isTablet = useMediaQuery(`(max-width: ${theme.breakpoints.md})`);
-  // const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.xs})`);
-  // const showNav = isMobile;
-  // const bottomNavSize = 65;
   return (
     <AppShell
-      // layout="alt"
-      // header={{ height: isMobile ? 106 : 56, collapsed: false }}
-      // footer={{ height: bottomNavSize, collapsed: false }}
+      header={{ height: (width * 9) / 16, collapsed: false }}
+      footer={{ height: 65, collapsed: false }}
+      p="xs"
+    >
+      <AppShell.Header>
+        <KtVideoPlayer videoId={videoId} />
+      </AppShell.Header>
+
+      <AppShell.Main>
+        <form action={formAction}>
+          <KtSearchableHeader value={query} onChangeText={setQuery} />
+          <Title order={3}>Karaoke Youtube Mới Nhất</Title>
+          <KtGridResults videos={data} onChange={setVideoId} />
+        </form>
+      </AppShell.Main>
+
+      <AppShell.Footer>
+        <KtBottomNavigation />
+      </AppShell.Footer>
+    </AppShell>
+  );
+}
+
+export function KtHomePage() {
+  const [query, setQuery] = useState("");
+  const [videoId, setVideoId] = useState(defaultVideoId);
+  const [{ data, error }, formAction] = useFormState(searchAction, {
+    // TODO: init data on first load
+    data: [],
+    error: null,
+  });
+  const theme = useMantineTheme();
+  const breakpoint = theme.breakpoints.xs;
+  const isXs = useMediaQuery(`(max-width: ${breakpoint})`);
+
+  if (error) return <Title c="red">{JSON.stringify(error)}</Title>;
+  if (isXs) {
+    return (
+      <MobileLayout
+        videoId={videoId}
+        setVideoId={setVideoId}
+        query={query}
+        setQuery={setQuery}
+      />
+    );
+  }
+
+  return (
+    <AppShell
       navbar={{
-        width: 320,
-        breakpoint: "xs",
-        // collapsed: { mobile: true },
+        width: 400,
+        breakpoint,
       }}
-      // aside={{
-      //   width: 300,
-      //   breakpoint: "xs",
-      //   collapsed: { desktop: false, mobile: true },
-      // }}
     >
       <AppShell.Main>
-        {videoId ? (
-          <KtVideoPlayer videoId={videoId} />
-        ) : (
-          <Image
-            src="https://placehold.co/600x400?text=[Video Player Here]"
-            alt="Video Player Here"
-          />
-        )}
+        <KtVideoPlayer videoId={videoId} />
       </AppShell.Main>
+
       <form action={formAction}>
-        <AppShell.Navbar withBorder={false} p="xs">
+        <AppShell.Navbar withBorder={false} p="xs" visibleFrom="xs">
           <AppShell.Section>
-            <KtHeader>
-              <Input
-                name="query"
-                required
-                variant="filled"
-                w="100%"
-                radius="xl"
-                placeholder="Ngày mai người ta lấy chồng, Ai chung tình được mãi,..."
-                rightSection={<IconSearch size={16} />}
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                autoCapitalize="none"
-                autoComplete="off"
-                autoCorrect="off"
-                spellCheck="false"
-                inputMode="search"
-                onKeyUp={(e) => e.key === "Enter" && e.currentTarget.blur()}
-              />
-            </KtHeader>
+            <KtSearchableHeader value={query} onChangeText={setQuery} />
           </AppShell.Section>
+
           <AppShell.Section grow my="xs" component={ScrollArea} scrollbars="y">
             <Stack>
               {/* <Box p="0">
@@ -101,10 +150,10 @@ export function KtHomePage() {
               <KtGridResults videos={data} onChange={setVideoId} />
             </Stack>
           </AppShell.Section>
+
           <AppShell.Section my="-16">
             <KtBottomNavigation />
           </AppShell.Section>
-          {/* <BottomNavigation vertical /> */}
         </AppShell.Navbar>
       </form>
     </AppShell>
