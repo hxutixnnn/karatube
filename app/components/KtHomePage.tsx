@@ -17,8 +17,7 @@ import { KtBottomNavigation } from "./KtBottomNavigation";
 import { KtGridResults } from "./KtGridResults";
 import { KtHeader } from "./KtHeader";
 import { KtVideoPlayer } from "./KtVideoPlayer";
-
-const defaultVideoId = "Vv2mtx5ZWwE";
+import { useVideoId } from "../hooks/useVideoId";
 
 function KtSearchableHeader({
   value,
@@ -51,40 +50,22 @@ function KtSearchableHeader({
 }
 
 function MobileLayout({
-  videoId,
-  setVideoId,
-  query,
-  setQuery,
+  VideoPlayerComponent,
+  SearchComponent,
 }: {
-  videoId: string;
-  setVideoId: (value: string) => void;
-  query: string;
-  setQuery: (value: string) => void;
+  VideoPlayerComponent: React.ReactNode;
+  SearchComponent: React.ReactNode;
 }) {
   const { width } = useViewportSize();
-  const [{ data, error }, formAction] = useFormState(searchAction, {
-    // TODO: init data on first load
-    data: [],
-    error: null,
-  });
-  if (error) return <Title c="red">{JSON.stringify(error)}</Title>;
   return (
     <AppShell
       header={{ height: (width * 9) / 16, collapsed: false }}
       footer={{ height: 65, collapsed: false }}
       p="xs"
     >
-      <AppShell.Header>
-        <KtVideoPlayer videoId={videoId} />
-      </AppShell.Header>
+      <AppShell.Header>{VideoPlayerComponent}</AppShell.Header>
 
-      <AppShell.Main>
-        <form action={formAction}>
-          <KtSearchableHeader value={query} onChangeText={setQuery} />
-          <Title order={3}>Karaoke Youtube Mới Nhất</Title>
-          <KtGridResults videos={data} onChange={setVideoId} />
-        </form>
-      </AppShell.Main>
+      <AppShell.Main>{SearchComponent}</AppShell.Main>
 
       <AppShell.Footer>
         <KtBottomNavigation />
@@ -95,24 +76,35 @@ function MobileLayout({
 
 export function KtHomePage() {
   const [query, setQuery] = useState("");
-  const [videoId, setVideoId] = useState(defaultVideoId);
   const [{ data, error }, formAction] = useFormState(searchAction, {
     // TODO: init data on first load
     data: [],
     error: null,
   });
   const theme = useMantineTheme();
-  const breakpoint = theme.breakpoints.xs;
-  const isXs = useMediaQuery(`(max-width: ${breakpoint})`);
+  const mobileBreakpoint = theme.breakpoints.xs;
+  const isMobile = useMediaQuery(`(max-width: ${mobileBreakpoint})`);
+  const [videoId] = useVideoId();
 
   if (error) return <Title c="red">{JSON.stringify(error)}</Title>;
-  if (isXs) {
+
+  const videoPlayer = videoId ? <KtVideoPlayer videoId={videoId} /> : null;
+  const searchHeader = (
+    <KtSearchableHeader value={query} onChangeText={setQuery} />
+  );
+  const searchResults = <KtGridResults videos={data} />;
+
+  if (isMobile) {
     return (
       <MobileLayout
-        videoId={videoId}
-        setVideoId={setVideoId}
-        query={query}
-        setQuery={setQuery}
+        VideoPlayerComponent={videoPlayer}
+        SearchComponent={
+          <form action={formAction}>
+            {searchHeader}
+            <Title order={3}>Karaoke Youtube Mới Nhất</Title>
+            {searchResults}
+          </form>
+        }
       />
     );
   }
@@ -121,18 +113,14 @@ export function KtHomePage() {
     <AppShell
       navbar={{
         width: 400,
-        breakpoint,
+        breakpoint: mobileBreakpoint,
       }}
     >
-      <AppShell.Main>
-        <KtVideoPlayer videoId={videoId} />
-      </AppShell.Main>
+      <AppShell.Main>{videoPlayer}</AppShell.Main>
 
       <form action={formAction}>
         <AppShell.Navbar withBorder={false} p="xs" visibleFrom="xs">
-          <AppShell.Section>
-            <KtSearchableHeader value={query} onChangeText={setQuery} />
-          </AppShell.Section>
+          <AppShell.Section>{searchHeader}</AppShell.Section>
 
           <AppShell.Section grow my="xs" component={ScrollArea} scrollbars="y">
             <Stack>
@@ -147,7 +135,7 @@ export function KtHomePage() {
                 />
               </Box> */}
               <Title order={3}>Karaoke Youtube Mới Nhất</Title>
-              <KtGridResults videos={data} onChange={setVideoId} />
+              {searchResults}
             </Stack>
           </AppShell.Section>
 

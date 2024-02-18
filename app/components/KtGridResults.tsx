@@ -1,8 +1,10 @@
 import { Alert, Loader, SimpleGrid, Stack } from "@mantine/core";
-import { Result } from "../actions/search.action";
-import { VideoCard } from "./card/video";
-import { useFormStatus } from "react-dom";
 import { IconInfoCircle } from "@tabler/icons-react";
+import Link from "next/link";
+import { useFormStatus } from "react-dom";
+import { Result } from "../actions/search.action";
+import { useVideoId } from "../hooks/useVideoId";
+import { VideoCard } from "./card/video";
 
 function EmptyState() {
   const icon = <IconInfoCircle />;
@@ -21,13 +23,12 @@ function EmptyState() {
 export function KtGridResults({
   videos,
   cols = 2,
-  onChange,
 }: {
   videos: Result[];
   cols?: number;
-  onChange?: (videoId: string) => void;
 }) {
   const { pending } = useFormStatus();
+  const [videoId, withVideoId] = useVideoId();
   return (
     <Stack align="center">
       {pending ? <Loader /> : !videos.length && <EmptyState />}
@@ -40,7 +41,10 @@ export function KtGridResults({
             image={video.thumbnails[0].url}
             category={video.channelName ?? ""}
             views={video.viewCount ?? 0}
-            onClick={() => onChange?.(video.id)}
+            active={videoId === video.id}
+            // @ts-ignore
+            component={Link}
+            href={withVideoId(video.id)}
           />
         ))}
       </SimpleGrid>

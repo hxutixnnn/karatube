@@ -20,6 +20,7 @@ export interface CardProps {
   title: string;
   category: string;
   views: number;
+  active?: boolean;
   onClick?: () => void;
 }
 
@@ -29,23 +30,22 @@ export function VideoCard({
   title,
   category,
   views,
+  active,
   ...props
 }: CardProps & UnstyledButtonProps) {
   const { ref, hovered } = useHover();
   const isDark = useIsDark();
 
   return (
-    <UnstyledButton
-      // component={Link}
-      // href={{ pathname: "/", query: { q: searchParams.get("q"), v: videoId } }}
-      {...props}
-    >
+    <UnstyledButton {...props}>
       <Card
         ref={ref}
         radius="10"
         p="6"
         bg="transparent"
         {...(hovered && { bg: isDark ? "dark.6" : "gray.1" })}
+        withBorder
+        style={{ borderColor: active ? "red" : "transparent" }}
       >
         <AspectRatio
           ratio={16 / 9}
