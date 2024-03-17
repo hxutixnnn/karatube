@@ -1,51 +1,50 @@
 "use client";
 
-import { ElementRef, useEffect, useRef } from "react";
-import videojs from "video.js";
-import Component from "video.js/dist/types/component";
-import "video.js/dist/video-js.css";
-import "videojs-youtube";
 
-const initialOptions = {
-  autoplay: true,
-  controls: true,
-  fluid: true,
-  controlBar: {
-    volumePanel: {
-      inline: false,
-    },
-  },
-};
+// export function KtVideoPlayer({ videoId }: { videoId?: string }) {
+//   const [data, setData] = useState<VideoInfo>();
+//   useEffect(() => {
+//     // @ts-expect-error
+//     if (videoId) getVideoInfo(videoId).then(setData).catch(console.log);
+//   }, [videoId]);
+
+//   return <pre>{JSON.stringify(data, null, 2)}</pre>;
+// }
+
+// export function KtVideoPlayer({ videoId }: { videoId: string }) {
+//   // const videoElement = useRef<ElementRef<"video">>(null);
+//   const [videoSrc, setSrc] = useState("");
+
+//   useEffect(() => {
+//     async function initPlayer() {
+//       // Get the video info
+//       const videoInfo = await getVideoInfo(videoId);
+//       if (videoInfo.data) setSrc(videoInfo.data);
+//       //     const player = dashjs.MediaPlayer().create();
+//       //     if (videoElement.current && videoInfo.data)
+//       //       player.initialize(videoElement.current, videoInfo.data, true);
+//     }
+
+//     initPlayer();
+//   }, [videoId]);
+
+//   return (
+//     <video width="750" height="500" controls>
+//       <source src={videoSrc} type="video/mp4" />
+//     </video>
+//   );
+// }
 
 export function KtVideoPlayer({ videoId }: { videoId: string }) {
-  const videoNode = useRef<ElementRef<"video">>(null);
-  const player = useRef<Component | null>(null);
-  const initialized = useRef(false);
-
-  useEffect(() => {
-    if (videoNode.current && !initialized.current) {
-      initialized.current = true; //prevent duplicate initialization
-
-      player.current = videojs(videoNode.current, {
-        ...initialOptions,
-        sources: [
-          {
-            type: "video/youtube",
-            src: `https://www.youtube.com/watch?v=${videoId}`,
-          },
-        ],
-      })
-      .ready(() => {
-        console.log("Player Ready");
-      });
-    }
-    //clear up player on dismount
-    return () => {
-      if (player.current) {
-        player.current.dispose();
-      }
-    };
-  }, [videoId]);
-
-  return <video ref={videoNode} className="video-js" />;
+  return (
+    <iframe
+      width="100%"
+      height="100%"
+      src={`https://www.youtube.com/embed/${videoId}`}
+      title="YouTube video player"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowFullScreen
+      style={{ border: 0 }}
+    />
+  );
 }

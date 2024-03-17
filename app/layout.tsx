@@ -1,9 +1,8 @@
-import { MantineProvider } from "@mantine/core";
 import type { Metadata, Viewport } from "next";
-import { theme } from "../theme";
 
 import "@mantine/core/styles.css";
 import "@mantine/carousel/styles.css";
+import Providers from "./Providers";
 // import classes from "./app.module.css";
 
 export const metadata: Metadata = {
@@ -28,9 +27,7 @@ export default function RootLayout({ children }: { children: any }) {
       <body
       // className={classes.body}
       >
-        <MantineProvider theme={theme} defaultColorScheme="dark">
-          {children}
-        </MantineProvider>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
